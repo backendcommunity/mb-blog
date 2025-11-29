@@ -30,19 +30,44 @@ export function htmlToText(html?: string | null): string {
  * Injects classes into HTML tags for consistent typography.
  */
 export function renderBlogContent(html: string): string {
-  // First, handle code blocks with language headers
+  // First, handle code blocks with Apple-style window header
   let processedHtml = html.replace(
     /<pre><code class="language-(\w+)">([\s\S]*?)<\/code><\/pre>/g,
     (match, lang, code) => {
-      return `<div class="code-block-wrapper my-8 rounded-2xl overflow-hidden shadow-2xl border border-slate-200 dark:border-slate-700">
-        <div class="code-block-header bg-slate-800 dark:bg-slate-900 px-4 py-2 flex items-center justify-between border-b border-slate-700">
-          <span class="text-slate-300 text-sm font-mono">${lang}</span>
-          <button onclick="navigator.clipboard.writeText(this.closest('.code-block-wrapper').querySelector('code').textContent)" class="text-slate-400 hover:text-white text-sm transition-colors">Copy</button>
+      return `<div class="code-block-wrapper my-8 rounded-xl overflow-hidden shadow-2xl border border-slate-200/50 dark:border-slate-700/50 bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-950">
+        <div class="code-block-header bg-gradient-to-r from-slate-200 to-slate-300 dark:from-slate-800 dark:to-slate-900 px-4 py-3 flex items-center justify-between border-b border-slate-300 dark:border-slate-700">
+          <div class="flex items-center space-x-2">
+            <div class="flex space-x-1.5">
+              <div class="w-3 h-3 rounded-full bg-red-500"></div>
+              <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+              <div class="w-3 h-3 rounded-full bg-green-500"></div>
+            </div>
+            <span class="text-slate-600 dark:text-slate-400 text-sm font-medium ml-3">${lang}</span>
+          </div>
+          <button onclick="navigator.clipboard.writeText(this.closest('.code-block-wrapper').querySelector('code').textContent.trim()); this.textContent='Copied!'; setTimeout(() => this.textContent='Copy', 2000);" class="px-3 py-1 text-xs font-medium text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white bg-white/50 dark:bg-slate-800/50 hover:bg-white dark:hover:bg-slate-700 rounded-md transition-all border border-slate-300/50 dark:border-slate-600/50">Copy</button>
         </div>
-        <pre class="!my-0 !border-0 !shadow-none !rounded-none"><code class="language-${lang} block bg-gradient-to-br from-slate-900 to-slate-800 dark:from-slate-950 dark:to-slate-900 text-white p-6 overflow-x-auto text-sm md:text-base leading-relaxed font-mono !rounded-none">${code}</code></pre>
+        <pre class="!my-0 !border-0 !shadow-none !rounded-none bg-gradient-to-br from-slate-900 via-slate-900 to-slate-950 dark:from-black dark:via-slate-950 dark:to-black"><code class="language-${lang} block text-slate-100 p-6 overflow-x-auto text-sm md:text-base leading-relaxed font-mono !rounded-none">${code}</code></pre>
       </div>`;
     }
   );
+
+  // Handle bare <pre><code> blocks (no language class) and make their text high-contrast (white)
+  processedHtml = processedHtml.replace(/<pre><code>([\s\S]*?)<\/code><\/pre>/g, (m, code) => {
+    return `<div class="code-block-wrapper my-8 rounded-xl overflow-hidden shadow-2xl border border-slate-200/50 dark:border-slate-700/50 bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-950">
+        <div class="code-block-header bg-gradient-to-r from-slate-200 to-slate-300 dark:from-slate-800 dark:to-slate-900 px-4 py-3 flex items-center justify-between border-b border-slate-300 dark:border-slate-700">
+          <div class="flex items-center space-x-2">
+            <div class="flex space-x-1.5">
+              <div class="w-3 h-3 rounded-full bg-red-500"></div>
+              <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+              <div class="w-3 h-3 rounded-full bg-green-500"></div>
+            </div>
+            <span class="text-slate-600 dark:text-slate-400 text-sm font-medium ml-3">code</span>
+          </div>
+          <button onclick="navigator.clipboard.writeText(this.closest('.code-block-wrapper').querySelector('code').textContent.trim()); this.textContent='Copied!'; setTimeout(() => this.textContent='Copy', 2000);" class="px-3 py-1 text-xs font-medium text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white bg-white/50 dark:bg-slate-800/50 hover:bg-white dark:hover:bg-slate-700 rounded-md transition-all border border-slate-300/50 dark:border-slate-600/50">Copy</button>
+        </div>
+        <pre class="!my-0 !border-0 !shadow-none !rounded-none bg-gradient-to-br from-slate-900 via-slate-900 to-slate-950 dark:from-black dark:via-slate-950 dark:to-black"><code class="block text-white p-6 overflow-x-auto text-sm md:text-base leading-relaxed font-mono !rounded-none">${code}</code></pre>
+      </div>`;
+  });
 
   return processedHtml
     .replace(/<h1/g, '<h1 class="text-3xl md:text-4xl font-bold text-slate-900 dark:text-slate-100 mt-8 mb-4 leading-tight"')
@@ -52,17 +77,19 @@ export function renderBlogContent(html: string): string {
     .replace(/<h5/g, '<h5 class="text-base font-semibold text-slate-900 dark:text-slate-100 mt-4 mb-2"')
     .replace(/<h6/g, '<h6 class="text-sm font-semibold text-slate-900 dark:text-slate-100 mt-3 mb-2"')
     .replace(/<p>/g, '<p class="text-lg md:text-xl font-medium text-slate-700 dark:text-slate-300 leading-relaxed mb-6">')
-    .replace(/<a /g, '<a class="text-[#13AECE] hover:text-[#13AECE]/80 underline transition-colors" ')
-    .replace(/<ul>/g, '<ul class="list-disc pl-6 mb-6 space-y-2 text-base md:text-lg text-slate-700 dark:text-slate-300">')
-    .replace(/<ol>/g, '<ol class="list-decimal pl-6 mb-6 space-y-2 text-base md:text-lg text-slate-700 dark:text-slate-300">')
-    .replace(/<li>/g, '<li class="ml-2">')
-    .replace(/<blockquote>/g, '<blockquote class="border-l-4 border-[#13AECE] pl-4 py-2 my-6 text-base md:text-lg text-slate-700 dark:text-slate-300 italic bg-slate-50 dark:bg-slate-800/40 px-4 rounded">')
+    .replace(/<a /g, '<a class="text-[hsl(var(--primary))] hover:text-[hsl(var(--primary))]/80 underline transition-colors" ')
+    .replace(/<ul>/g, '<ul class="list-disc pl-6 mb-6 space-y-3 text-lg md:text-xl text-slate-700 dark:text-slate-300">')
+    .replace(/<ol>/g, '<ol class="list-decimal pl-6 mb-6 space-y-3 text-lg md:text-xl text-slate-700 dark:text-slate-300">')
+    .replace(/<li>/g, '<li class="mb-2">')
+    .replace(/<blockquote>/g, '<blockquote class="border-l-4 border-[#13AECE] pl-6 py-4 my-8 text-lg md:text-xl text-slate-700 dark:text-slate-300 italic bg-slate-50 dark:bg-slate-800/40 rounded-r-lg">')
     .replace(/<code>/g, '<code class="bg-slate-100 dark:bg-slate-800/80 px-2 py-1 rounded text-[#13AECE] dark:text-[#13AECE] text-sm font-mono">')
     .replace(/<em>/g, '<em class="italic text-slate-700 dark:text-slate-300">')
     .replace(/<strong>/g, '<strong class="font-bold text-slate-900 dark:text-slate-100">')
-    .replace(/<table>/g, '<table class="w-full border-collapse border border-slate-300 dark:border-slate-600 my-6">')
-    .replace(/<thead>/g, '<thead class="bg-slate-100 dark:bg-slate-800">')
-    .replace(/<th>/g, '<th class="border border-slate-300 dark:border-slate-600 px-4 py-2 text-left font-semibold text-slate-900 dark:text-slate-100">')
-    .replace(/<td>/g, '<td class="border border-slate-300 dark:border-slate-600 px-4 py-2 text-slate-600 dark:text-slate-400">')
+    .replace(/<table>/g, '<div class="overflow-x-auto my-8 rounded-lg border border-slate-200 dark:border-slate-700 shadow-lg"><table class="w-full border-collapse bg-white dark:bg-slate-900">')
+    .replace(/<\/table>/g, '</table></div>')
+    .replace(/<thead>/g, '<thead class="bg-gradient-to-r from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-900">')
+    .replace(/<th>/g, '<th class="border-b-2 border-slate-300 dark:border-slate-600 px-6 py-4 text-left font-bold text-slate-900 dark:text-slate-100 text-sm uppercase tracking-wider">')
+    .replace(/<tr>/g, '<tr class="border-b border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">')
+    .replace(/<td>/g, '<td class="px-6 py-4 text-slate-700 dark:text-slate-300">')
     .replace(/<img /g, '<img class="w-full rounded-lg shadow-lg my-6" ');
 }

@@ -9,9 +9,13 @@ import {
   Grid,
   List,
   Filter,
+  Twitter,
+  Linkedin,
+  Facebook,
 } from "lucide-react";
 import { BrandLogo } from "@/components/brand-logo";
 import { ThemeToggle } from "@/components/theme-toggle";
+import Header from "@/components/header";
 import { Pagination } from "@/components/pagination";
 import { htmlToText } from "@/lib/utils";
 import type { BlogPost } from "@/lib/types";
@@ -45,19 +49,7 @@ export function AuthorPageClient({ authorInfo, posts, total }: AuthorPageClientP
 
   return (
     <div className="min-h-screen bg-white dark:bg-[#0A0F1C] transition-colors duration-300 font-sans">
-      {/* Navigation */}
-      <nav className="fixed top-0 w-full bg-white/80 dark:bg-[#0A0F1C]/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <Link href="/" className="flex items-center space-x-2">
-              <BrandLogo size="sm" variant="default" />
-            </Link>
-            <div className="flex items-center space-x-6">
-              <ThemeToggle />
-            </div>
-          </div>
-        </div>
-      </nav>
+      <Header />
 
       {/* Back to Blog */}
       <div className="pt-24 pb-4 px-4 sm:px-6 lg:px-8">
@@ -92,6 +84,18 @@ export function AuthorPageClient({ authorInfo, posts, total }: AuthorPageClientP
                   <p className="text-slate-600 dark:text-slate-300 leading-relaxed mt-4">
                     {authorInfo.bio}
                   </p>
+                  {/* Social Icons */}
+                  <div className="flex items-center justify-center gap-4 mt-6">
+                    <a href="#" aria-label="Twitter" className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800/60 text-slate-600 dark:text-slate-300 hover:text-[#13AECE] hover:bg-slate-200 dark:hover:bg-slate-700 transition">
+                      <Twitter className="w-5 h-5" />
+                    </a>
+                    <a href="#" aria-label="LinkedIn" className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800/60 text-slate-600 dark:text-slate-300 hover:text-[#13AECE] hover:bg-slate-200 dark:hover:bg-slate-700 transition">
+                      <Linkedin className="w-5 h-5" />
+                    </a>
+                    <a href="#" aria-label="Facebook" className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800/60 text-slate-600 dark:text-slate-300 hover:text-[#13AECE] hover:bg-slate-200 dark:hover:bg-slate-700 transition">
+                      <Facebook className="w-5 h-5" />
+                    </a>
+                  </div>
                 </div>
 
                 {/* Stats */}
@@ -147,7 +151,7 @@ export function AuthorPageClient({ authorInfo, posts, total }: AuthorPageClientP
 
               {/* Content Grid/List */}
               {viewMode === "grid" ? (
-                <div className="grid md:grid-cols-2 gap-10">
+                <div className="grid md:grid-cols-2 gap-8">
                   {paginatedPosts.map((post) => (
                     <Link
                       key={post.id}
@@ -193,7 +197,7 @@ export function AuthorPageClient({ authorInfo, posts, total }: AuthorPageClientP
                   ))}
                 </div>
               ) : (
-                <div className="space-y-10">
+                <div className="space-y-6">
                   {paginatedPosts.map((post) => (
                     <Link
                       key={post.id}

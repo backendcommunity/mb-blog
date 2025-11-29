@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import { BrandLogo } from "@/components/brand-logo";
 import { ThemeToggle } from "@/components/theme-toggle";
+import Header from "@/components/header";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import type { Components } from "react-markdown";
@@ -102,19 +103,7 @@ export function BlogPostClient({ blogPost, relatedPosts }: BlogPostClientProps) 
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 transition-colors duration-300 font-sans">
-      {/* Navigation */}
-      <nav className="fixed top-0 w-full bg-white/90 dark:bg-slate-950/90 backdrop-blur-xl border-b border-slate-200/80 dark:border-slate-800/80 z-50 shadow-sm dark:shadow-slate-900/50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <Link href="/" className="flex items-center space-x-2">
-              <BrandLogo size="sm" variant="default" />
-            </Link>
-            <div className="flex items-center space-x-6">
-              <ThemeToggle />
-            </div>
-          </div>
-        </div>
-      </nav>
+      <Header />
 
       {/* Back to Blog */}
       <div className="pt-24 pb-4 px-4 sm:px-6 lg:px-8">
@@ -245,7 +234,7 @@ export function BlogPostClient({ blogPost, relatedPosts }: BlogPostClientProps) 
       <main className="px-4 sm:px-6 lg:px-8 pb-16">
         <div className="max-w-4xl mx-auto">
           <div
-            className="prose prose-lg max-w-none overflow-x-hidden break-words"
+            className="article-content max-w-none overflow-x-hidden break-words"
             dangerouslySetInnerHTML={{
               __html: renderBlogContent(blogPost.content),
             }}

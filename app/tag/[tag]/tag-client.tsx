@@ -5,6 +5,7 @@ import Link from "next/link";
 import { ArrowLeft, Calendar, Clock, Grid, List, Tag as TagIcon } from "lucide-react";
 import { BrandLogo } from "@/components/brand-logo";
 import { ThemeToggle } from "@/components/theme-toggle";
+import Header from "@/components/header";
 import { Pagination } from "@/components/pagination";
 import { htmlToText } from "@/lib/utils";
 import type { BlogPost } from "@/lib/types";
@@ -33,18 +34,7 @@ export function TagPageClient({ tagName, posts, total }: TagPageClientProps) {
 
   return (
     <div className="min-h-screen bg-white dark:bg-[#0A0F1C] transition-colors duration-300 font-sans">
-      <nav className="fixed top-0 w-full bg-white/80 dark:bg-[#0A0F1C]/80 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <Link href="/" className="flex items-center space-x-2">
-              <BrandLogo size="sm" variant="default" />
-            </Link>
-            <div className="flex items-center space-x-6">
-              <ThemeToggle />
-            </div>
-          </div>
-        </div>
-      </nav>
+      <Header />
 
       <div className="pt-24 pb-4 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
@@ -100,7 +90,7 @@ export function TagPageClient({ tagName, posts, total }: TagPageClientProps) {
           </div>
 
           {viewMode === "grid" ? (
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
               {paginatedPosts.map((post) => (
                 <Link key={post.id} href={`/${post.slug}`} className="group">
                   <article className="h-full bg-white dark:bg-[#1E293B] rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-700 hover:shadow-xl hover:border-[#13AECE]/30 dark:hover:border-[#13AECE]/30 transition-all duration-300 group-hover:-translate-y-1">
@@ -142,7 +132,7 @@ export function TagPageClient({ tagName, posts, total }: TagPageClientProps) {
               ))}
             </div>
           ) : (
-            <div className="space-y-10">
+            <div className="space-y-6">
               {paginatedPosts.map((post) => (
                 <Link key={post.id} href={`/${post.slug}`} className="group">
                   <article className="bg-white dark:bg-[#1E293B] p-6 rounded-2xl border border-slate-200 dark:border-slate-700 hover:shadow-xl hover:border-[#13AECE]/30 dark:hover:border-[#13AECE]/30 transition-all duration-300 group-hover:-translate-x-1">

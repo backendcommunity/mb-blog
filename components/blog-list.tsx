@@ -164,7 +164,7 @@ export function BlogList({ initialPosts, initialFeaturedPosts, categories }: Blo
               </h2>
             </div>
 
-            <div className="grid md:grid-cols-2 gap-8">
+            <div className="grid md:grid-cols-2 gap-x-8 gap-y-12">
               {filteredFeaturedPosts.map((post) => (
                 <Link key={post.id} href={`/${post.slug}`} className="group">
                   <article className="h-full bg-white dark:bg-slate-800/50 rounded-3xl overflow-hidden border border-slate-200 dark:border-slate-700/50 hover:shadow-2xl hover:shadow-[#13AECE]/10 dark:hover:shadow-[#13AECE]/20 hover:border-[#13AECE]/50 dark:hover:border-[#13AECE]/50 transition-all duration-500 group-hover:-translate-y-2 backdrop-blur-sm">
@@ -236,10 +236,10 @@ export function BlogList({ initialPosts, initialFeaturedPosts, categories }: Blo
           </div>
 
           {viewMode === "grid" ? (
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12">
               {paginatedPosts.map((post) => (
                 <Link key={post.id} href={`/${post.slug}`} className="group">
-                  <article className="h-full bg-white dark:bg-slate-800/50 rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-700/50 hover:shadow-xl hover:shadow-[#13AECE]/10 dark:hover:shadow-[#13AECE]/20 hover:border-[#13AECE]/50 dark:hover:border-[#13AECE]/50 transition-all duration-500 group-hover:-translate-y-2 backdrop-blur-sm">
+                  <article className="bg-white dark:bg-slate-800/50 rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-700/50 hover:shadow-xl hover:shadow-[#13AECE]/10 dark:hover:shadow-[#13AECE]/20 hover:border-[#13AECE]/50 dark:hover:border-[#13AECE]/50 transition-all duration-500 group-hover:-translate-y-2 backdrop-blur-sm">
                     <div className="aspect-video bg-slate-100 dark:bg-slate-800 relative overflow-hidden">
                       <img
                         src={post.image || "/placeholder.svg"}
