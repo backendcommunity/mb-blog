@@ -23,7 +23,7 @@ export function Header() {
   return (
     <nav className="fixed top-0 w-full bg-white/90 dark:bg-slate-950/90 backdrop-blur-xl border-b border-slate-200/80 dark:border-slate-800/80 z-50 shadow-sm dark:shadow-slate-900/50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex md:grid md:grid-cols-[auto,1fr,auto] items-center h-16 relative">
+        <div className="flex md:grid md:grid-cols-[auto,1fr,auto] items-center justify-between h-16 relative">
           <div className="flex items-center gap-4">
             <Link href="/" className="flex items-center">
               <BrandLogo size="sm" variant="default" />
