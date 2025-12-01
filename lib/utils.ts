@@ -102,7 +102,7 @@ export function renderBlogContent(html: string): string {
         updatedAttrs = `${updatedAttrs} class="article-table"`;
       }
 
-      return `<div class="article-table-wrapper overflow-x-auto my-8 rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900/40 shadow-xl"><table${updatedAttrs}>`;
+      return `<div class="article-table-wrapper overflow-x-auto my-8 rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 shadow-xl"><table${updatedAttrs}>`;
     })
     .replace(/<\/table>/g, "</table></div>");
 

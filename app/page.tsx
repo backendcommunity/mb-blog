@@ -23,9 +23,8 @@ function extractCategories(posts: BlogPost[]): string[] {
 }
 
 export default async function Home() {
-  // Fetch data from Strapi API
   const [postsResponse, featuredPosts] = await Promise.all([
-    getPosts({ page: 1, count: 50 }),
+    getPosts({ page: 1, count: 1000 }),
     getStickyPosts(),
   ]);
 
