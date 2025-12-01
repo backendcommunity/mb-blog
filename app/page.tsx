@@ -95,11 +95,37 @@ export default async function Home() {
       {/* Footer */}
       <footer className="bg-white/50 dark:bg-slate-950/50 backdrop-blur-xl border-t border-slate-200 dark:border-slate-800/50 py-12 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+          <Link href="https://masteringbackend.com">
             <BrandLogo size="sm" variant="default" />
+          </Link>
             <div className="flex items-center space-x-6">
-                <a href="#" className="text-slate-500 hover:text-[#13AECE] transition-colors"><Github className="w-5 h-5" /></a>
-                <a href="#" className="text-slate-500 hover:text-[#13AECE] transition-colors"><Twitter className="w-5 h-5" /></a>
-                <a href="#" className="text-slate-500 hover:text-[#13AECE] transition-colors"><Linkedin className="w-5 h-5" /></a>
+                <a
+                  href="https://github.com/backendcommunity/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-slate-500 hover:text-[#13AECE] transition-colors"
+                  aria-label="Masteringbackend on GitHub"
+                >
+                  <Github className="w-5 h-5" />
+                </a>
+                <a
+                  href="https://x.com/master_backend"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-slate-500 hover:text-[#13AECE] transition-colors"
+                  aria-label="Masteringbackend on Twitter"
+                >
+                  <Twitter className="w-5 h-5" />
+                </a>
+                <a
+                  href="https://www.linkedin.com/company/masteringbackend"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-slate-500 hover:text-[#13AECE] transition-colors"
+                  aria-label="Masteringbackend on LinkedIn"
+                >
+                  <Linkedin className="w-5 h-5" />
+                </a>
             </div>
             <p className="text-slate-500 text-sm">
                 © {new Date().getFullYear()} Masteringbackend. All rights reserved.

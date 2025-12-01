@@ -7,12 +7,12 @@ import { BrandLogo } from "@/components/brand-logo";
 import { ThemeToggle } from "@/components/theme-toggle";
 
 const NAV_ITEMS = [
-  { label: "Learn", href: "/learn" },
-  { label: "Build", href: "/build" },
-  { label: "Grow", href: "/grow" },
+  { label: "Learn", href: "https://masteringbackend.com/#learn-practically" },
+  { label: "Build", href: "https://masteringbackend.com/#build-show" },
+  { label: "Grow", href: "https://masteringbackend.com/#grow-succeed" },
   { label: "Blog", href: "/" },
-  { label: "Community", href: "/community" },
-  { label: "Login", href: "/login" },
+  { label: "Community", href: "https://masteringbackend.com/community" },
+  { label: "Login", href: "https://app.masteringbackend.com/?ref=home" },
 ];
 
 const MAIN_NAV_ITEMS = NAV_ITEMS.filter((item) => item.label !== "Login");
@@ -25,7 +25,7 @@ export function Header() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex md:grid md:grid-cols-[auto,1fr,auto] items-center justify-between h-16 relative">
           <div className="flex items-center gap-4">
-            <Link href="/" className="flex items-center">
+            <Link href="https://masteringbackend.com" className="flex items-center">
               <BrandLogo size="sm" variant="default" />
             </Link>
           </div>

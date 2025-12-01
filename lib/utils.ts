@@ -34,42 +34,42 @@ export function renderBlogContent(html: string): string {
   let processedHtml = html.replace(
     /<pre><code class="language-(\w+)">([\s\S]*?)<\/code><\/pre>/g,
     (match, lang, code) => {
-      return `<div class="code-block-wrapper my-8 rounded-xl overflow-hidden shadow-2xl border border-slate-200/50 dark:border-slate-700/50 bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-950">
-        <div class="code-block-header bg-gradient-to-r from-slate-200 to-slate-300 dark:from-slate-800 dark:to-slate-900 px-4 py-3 flex items-center justify-between border-b border-slate-300 dark:border-slate-700">
+      return `<div class="code-block-wrapper my-8 rounded-xl overflow-hidden shadow-2xl border border-slate-800/70 bg-gradient-to-br from-slate-900 via-slate-900 to-slate-950">
+        <div class="code-block-header bg-gradient-to-r from-slate-800 to-slate-900 px-4 py-3 flex items-center justify-between border-b border-slate-700">
           <div class="flex items-center space-x-2">
             <div class="flex space-x-1.5">
               <div class="w-3 h-3 rounded-full bg-red-500"></div>
               <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
               <div class="w-3 h-3 rounded-full bg-green-500"></div>
             </div>
-            <span class="text-slate-600 dark:text-slate-400 text-sm font-medium ml-3">${lang}</span>
+            <span class="text-slate-300 text-xs font-medium ml-3 uppercase tracking-wider">${lang}</span>
           </div>
-          <button onclick="navigator.clipboard.writeText(this.closest('.code-block-wrapper').querySelector('code').textContent.trim()); this.textContent='Copied!'; setTimeout(() => this.textContent='Copy', 2000);" class="px-3 py-1 text-xs font-medium text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white bg-white/50 dark:bg-slate-800/50 hover:bg-white dark:hover:bg-slate-700 rounded-md transition-all border border-slate-300/50 dark:border-slate-600/50">Copy</button>
+          <button onclick="navigator.clipboard.writeText(this.closest('.code-block-wrapper').querySelector('code').textContent.trim()); this.textContent='Copied!'; setTimeout(() => this.textContent='Copy', 2000);" class="px-3 py-1 text-xs font-medium text-slate-300 hover:text-white rounded-md transition-all border border-slate-700 hover:bg-slate-700">Copy</button>
         </div>
-        <pre class="!my-0 !border-0 !shadow-none !rounded-none bg-gradient-to-br from-slate-900 via-slate-900 to-slate-950 dark:from-black dark:via-slate-950 dark:to-black"><code class="language-${lang} block text-slate-100 p-6 overflow-x-auto text-sm md:text-base leading-relaxed font-mono !rounded-none">${code}</code></pre>
+        <pre class="!my-0 !border-0 !shadow-none !rounded-none bg-gradient-to-br from-slate-900 via-slate-900 to-slate-950"><code class="language-${lang} block text-slate-100 p-6 overflow-x-auto text-sm md:text-base leading-relaxed font-mono !rounded-none">${code}</code></pre>
       </div>`;
     }
   );
 
   // Handle bare <pre><code> blocks (no language class) and make their text high-contrast (white)
   processedHtml = processedHtml.replace(/<pre><code>([\s\S]*?)<\/code><\/pre>/g, (m, code) => {
-    return `<div class="code-block-wrapper my-8 rounded-xl overflow-hidden shadow-2xl border border-slate-200/50 dark:border-slate-700/50 bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-950">
-        <div class="code-block-header bg-gradient-to-r from-slate-200 to-slate-300 dark:from-slate-800 dark:to-slate-900 px-4 py-3 flex items-center justify-between border-b border-slate-300 dark:border-slate-700">
+    return `<div class="code-block-wrapper my-8 rounded-xl overflow-hidden shadow-2xl border border-slate-800/70 bg-gradient-to-br from-slate-900 via-slate-900 to-slate-950">
+        <div class="code-block-header bg-gradient-to-r from-slate-800 to-slate-900 px-4 py-3 flex items-center justify-between border-b border-slate-700">
           <div class="flex items-center space-x-2">
             <div class="flex space-x-1.5">
               <div class="w-3 h-3 rounded-full bg-red-500"></div>
               <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
               <div class="w-3 h-3 rounded-full bg-green-500"></div>
             </div>
-            <span class="text-slate-600 dark:text-slate-400 text-sm font-medium ml-3">code</span>
+            <span class="text-slate-300 text-xs font-medium ml-3 uppercase tracking-wider">code</span>
           </div>
-          <button onclick="navigator.clipboard.writeText(this.closest('.code-block-wrapper').querySelector('code').textContent.trim()); this.textContent='Copied!'; setTimeout(() => this.textContent='Copy', 2000);" class="px-3 py-1 text-xs font-medium text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white bg-white/50 dark:bg-slate-800/50 hover:bg-white dark:hover:bg-slate-700 rounded-md transition-all border border-slate-300/50 dark:border-slate-600/50">Copy</button>
+          <button onclick="navigator.clipboard.writeText(this.closest('.code-block-wrapper').querySelector('code').textContent.trim()); this.textContent='Copied!'; setTimeout(() => this.textContent='Copy', 2000);" class="px-3 py-1 text-xs font-medium text-slate-300 hover:text-white rounded-md transition-all border border-slate-700 hover:bg-slate-700">Copy</button>
         </div>
-        <pre class="!my-0 !border-0 !shadow-none !rounded-none bg-gradient-to-br from-slate-900 via-slate-900 to-slate-950 dark:from-black dark:via-slate-950 dark:to-black"><code class="block text-white p-6 overflow-x-auto text-sm md:text-base leading-relaxed font-mono !rounded-none">${code}</code></pre>
+        <pre class="!my-0 !border-0 !shadow-none !rounded-none bg-gradient-to-br from-slate-900 via-slate-900 to-slate-950"><code class="block text-white p-6 overflow-x-auto text-sm md:text-base leading-relaxed font-mono !rounded-none">${code}</code></pre>
       </div>`;
   });
 
-  return processedHtml
+  processedHtml = processedHtml
     .replace(/<h1/g, '<h1 class="text-3xl md:text-4xl font-bold text-slate-900 dark:text-slate-100 mt-8 mb-4 leading-tight"')
     .replace(/<h2/g, '<h2 class="text-2xl md:text-3xl font-bold text-slate-900 dark:text-slate-100 mt-8 mb-4 leading-tight"')
     .replace(/<h3/g, '<h3 class="text-xl md:text-2xl font-bold text-slate-900 dark:text-slate-100 mt-6 mb-3 leading-tight"')
@@ -85,11 +85,26 @@ export function renderBlogContent(html: string): string {
     .replace(/<code>/g, '<code class="bg-slate-100 dark:bg-slate-800/80 px-2 py-1 rounded text-[#13AECE] dark:text-[#13AECE] text-sm font-mono">')
     .replace(/<em>/g, '<em class="italic text-slate-700 dark:text-slate-300">')
     .replace(/<strong>/g, '<strong class="font-bold text-slate-900 dark:text-slate-100">')
-    .replace(/<table>/g, '<div class="overflow-x-auto my-8 rounded-lg border border-slate-200 dark:border-slate-700 shadow-lg"><table class="w-full border-collapse bg-white dark:bg-slate-900">')
-    .replace(/<\/table>/g, '</table></div>')
-    .replace(/<thead>/g, '<thead class="bg-gradient-to-r from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-900">')
-    .replace(/<th>/g, '<th class="border-b-2 border-slate-300 dark:border-slate-600 px-6 py-4 text-left font-bold text-slate-900 dark:text-slate-100 text-sm uppercase tracking-wider">')
-    .replace(/<tr>/g, '<tr class="border-b border-slate-200 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">')
-    .replace(/<td>/g, '<td class="px-6 py-4 text-slate-700 dark:text-slate-300">')
     .replace(/<img /g, '<img class="w-full rounded-lg shadow-lg my-6" ');
+
+  processedHtml = processedHtml
+    .replace(/<table([^>]*)>/g, (_match, attrs = "") => {
+      let updatedAttrs = attrs;
+      const classMatch = attrs.match(/class="([^"]*)"/);
+      if (classMatch) {
+        if (!classMatch[1].includes("article-table")) {
+          updatedAttrs = updatedAttrs.replace(
+            classMatch[0],
+            `class="${`${classMatch[1]} article-table`.trim()}"`
+          );
+        }
+      } else {
+        updatedAttrs = `${updatedAttrs} class="article-table"`;
+      }
+
+      return `<div class="article-table-wrapper overflow-x-auto my-8 rounded-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900/40 shadow-xl"><table${updatedAttrs}>`;
+    })
+    .replace(/<\/table>/g, "</table></div>");
+
+  return processedHtml;
 }
