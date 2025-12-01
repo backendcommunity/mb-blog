@@ -124,7 +124,7 @@ export function BlogPostClient({ blogPost, relatedPosts }: BlogPostClientProps) 
           {/* Category and Meta */}
           <div className="flex flex-wrap items-center gap-4 mb-6">
             <Link
-              href={`/category/${blogPost.categorySlug}`}
+              href={`/categories/${blogPost.categorySlug}`}
               className="bg-gradient-to-r from-[#13AECE] to-[#0891b2] text-white px-4 py-1.5 rounded-full text-sm font-medium hover:shadow-xl hover:shadow-[#13AECE]/30 transition-all hover:scale-105 shadow-lg shadow-[#13AECE]/20"
             >
               {blogPost.category}
@@ -249,7 +249,7 @@ export function BlogPostClient({ blogPost, relatedPosts }: BlogPostClientProps) 
               {blogPost.tags.map((tag, index) => (
                 <Link
                   key={tag}
-                  href={`/tag/${blogPost.tagSlugs[index] || tag.toLowerCase()}`}
+                  href={`/tags/${blogPost.tagSlugs[index] || tag.toLowerCase()}`}
                   className="flex items-center space-x-1 bg-slate-100 dark:bg-slate-800/50 text-slate-600 dark:text-slate-400 px-4 py-2 rounded-full hover:bg-gradient-to-r hover:from-[#13AECE] hover:to-[#0891b2] hover:text-white transition-all hover:scale-105 border border-slate-200 dark:border-slate-700 hover:border-transparent hover:shadow-lg hover:shadow-[#13AECE]/30"
                 >
                   <Tag className="w-3 h-3" />

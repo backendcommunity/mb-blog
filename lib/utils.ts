@@ -1,3 +1,5 @@
+// lib/utils.ts - Enhanced version with highlight.js support
+
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 
@@ -26,49 +28,112 @@ export function htmlToText(html?: string | null): string {
 }
 
 /**
+ * Escape HTML entities to prevent XSS
+ */
+function escapeHtml(text: string): string {
+  const map: Record<string, string> = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#039;'
+  };
+  return text.replace(/[&<>"']/g, m => map[m]);
+}
+
+/**
  * Render HTML content with Tailwind styles applied inline.
  * Injects classes into HTML tags for consistent typography.
+ * Now uses highlight.js for proper syntax highlighting.
  */
 export function renderBlogContent(html: string): string {
-  // First, handle code blocks with Apple-style window header
+  // Handle code blocks with language-specific syntax highlighting
   let processedHtml = html.replace(
     /<pre><code class="language-(\w+)">([\s\S]*?)<\/code><\/pre>/g,
     (match, lang, code) => {
-      return `<div class="code-block-wrapper my-8 rounded-xl overflow-hidden shadow-2xl border border-slate-800/70 bg-gradient-to-br from-slate-900 via-slate-900 to-slate-950">
+      // Decode HTML entities in code
+      const decodedCode = code
+        .replace(/&lt;/g, '<')
+        .replace(/&gt;/g, '>')
+        .replace(/&amp;/g, '&')
+        .replace(/&quot;/g, '"')
+        .replace(/&#039;/g, "'");
+      
+      // Escape for safe HTML rendering
+      const escapedCode = escapeHtml(decodedCode);
+      
+      return `<div class="code-block-wrapper my-8 rounded-xl overflow-hidden shadow-2xl border border-slate-800/70 bg-gradient-to-br from-slate-900 via-slate-900 to-slate-950" data-code-block>
         <div class="code-block-header bg-gradient-to-r from-slate-800 to-slate-900 px-4 py-3 flex items-center justify-between border-b border-slate-700">
           <div class="flex items-center space-x-2">
             <div class="flex space-x-1.5">
-              <div class="w-3 h-3 rounded-full bg-red-500"></div>
-              <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
-              <div class="w-3 h-3 rounded-full bg-green-500"></div>
+              <div class="w-3 h-3 rounded-full bg-red-500 hover:bg-red-400 cursor-pointer transition-colors"></div>
+              <div class="w-3 h-3 rounded-full bg-yellow-500 hover:bg-yellow-400 cursor-pointer transition-colors"></div>
+              <div class="w-3 h-3 rounded-full bg-green-500 hover:bg-green-400 cursor-pointer transition-colors"></div>
             </div>
             <span class="text-slate-300 text-xs font-medium ml-3 uppercase tracking-wider">${lang}</span>
           </div>
-          <button onclick="navigator.clipboard.writeText(this.closest('.code-block-wrapper').querySelector('code').textContent.trim()); this.textContent='Copied!'; setTimeout(() => this.textContent='Copy', 2000);" class="px-3 py-1 text-xs font-medium text-slate-300 hover:text-white rounded-md transition-all border border-slate-700 hover:bg-slate-700">Copy</button>
+          <button onclick="
+            const code = this.closest('.code-block-wrapper').querySelector('code').textContent.trim();
+            navigator.clipboard.writeText(code);
+            const originalText = this.textContent;
+            this.textContent = 'Copied!';
+            this.classList.add('!text-green-400', '!border-green-400');
+            setTimeout(() => {
+              this.textContent = originalText;
+              this.classList.remove('!text-green-400', '!border-green-400');
+            }, 2000);
+          " class="px-3 py-1 text-xs font-medium text-slate-300 hover:text-white rounded-md transition-all border border-slate-700 hover:bg-slate-700 hover:border-slate-600 active:scale-95">
+            Copy
+          </button>
         </div>
-        <pre class="!my-0 !border-0 !shadow-none !rounded-none bg-gradient-to-br from-slate-900 via-slate-900 to-slate-950"><code class="language-${lang} block text-slate-100 p-6 overflow-x-auto text-sm md:text-base leading-relaxed font-mono !rounded-none">${code}</code></pre>
+        <pre class="!my-0 !border-0 !shadow-none !rounded-none bg-gradient-to-br from-slate-900 via-slate-900 to-slate-950"><code class="hljs language-${lang} block p-6 overflow-x-auto text-sm md:text-base leading-relaxed !rounded-none !bg-transparent" data-lang="${lang}">${escapedCode}</code></pre>
       </div>`;
     }
   );
 
-  // Handle bare <pre><code> blocks (no language class) and make their text high-contrast (white)
-  processedHtml = processedHtml.replace(/<pre><code>([\s\S]*?)<\/code><\/pre>/g, (m, code) => {
-    return `<div class="code-block-wrapper my-8 rounded-xl overflow-hidden shadow-2xl border border-slate-800/70 bg-gradient-to-br from-slate-900 via-slate-900 to-slate-950">
+  // Handle bare <pre><code> blocks (no language class)
+  processedHtml = processedHtml.replace(
+    /<pre><code>([\s\S]*?)<\/code><\/pre>/g, 
+    (m, code) => {
+      const decodedCode = code
+        .replace(/&lt;/g, '<')
+        .replace(/&gt;/g, '>')
+        .replace(/&amp;/g, '&')
+        .replace(/&quot;/g, '"')
+        .replace(/&#039;/g, "'");
+      
+      const escapedCode = escapeHtml(decodedCode);
+      
+      return `<div class="code-block-wrapper my-8 rounded-xl overflow-hidden shadow-2xl border border-slate-800/70 bg-gradient-to-br from-slate-900 via-slate-900 to-slate-950" data-code-block>
         <div class="code-block-header bg-gradient-to-r from-slate-800 to-slate-900 px-4 py-3 flex items-center justify-between border-b border-slate-700">
           <div class="flex items-center space-x-2">
             <div class="flex space-x-1.5">
-              <div class="w-3 h-3 rounded-full bg-red-500"></div>
-              <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
-              <div class="w-3 h-3 rounded-full bg-green-500"></div>
+              <div class="w-3 h-3 rounded-full bg-red-500 hover:bg-red-400 cursor-pointer transition-colors"></div>
+              <div class="w-3 h-3 rounded-full bg-yellow-500 hover:bg-yellow-400 cursor-pointer transition-colors"></div>
+              <div class="w-3 h-3 rounded-full bg-green-500 hover:bg-green-400 cursor-pointer transition-colors"></div>
             </div>
             <span class="text-slate-300 text-xs font-medium ml-3 uppercase tracking-wider">code</span>
           </div>
-          <button onclick="navigator.clipboard.writeText(this.closest('.code-block-wrapper').querySelector('code').textContent.trim()); this.textContent='Copied!'; setTimeout(() => this.textContent='Copy', 2000);" class="px-3 py-1 text-xs font-medium text-slate-300 hover:text-white rounded-md transition-all border border-slate-700 hover:bg-slate-700">Copy</button>
+          <button onclick="
+            const code = this.closest('.code-block-wrapper').querySelector('code').textContent.trim();
+            navigator.clipboard.writeText(code);
+            const originalText = this.textContent;
+            this.textContent = 'Copied!';
+            this.classList.add('!text-green-400', '!border-green-400');
+            setTimeout(() => {
+              this.textContent = originalText;
+              this.classList.remove('!text-green-400', '!border-green-400');
+            }, 2000);
+          " class="px-3 py-1 text-xs font-medium text-slate-300 hover:text-white rounded-md transition-all border border-slate-700 hover:bg-slate-700 hover:border-slate-600 active:scale-95">
+            Copy
+          </button>
         </div>
-        <pre class="!my-0 !border-0 !shadow-none !rounded-none bg-gradient-to-br from-slate-900 via-slate-900 to-slate-950"><code class="block text-white p-6 overflow-x-auto text-sm md:text-base leading-relaxed font-mono !rounded-none">${code}</code></pre>
+        <pre class="!my-0 !border-0 !shadow-none !rounded-none bg-gradient-to-br from-slate-900 via-slate-900 to-slate-950"><code class="hljs block p-6 overflow-x-auto text-sm md:text-base leading-relaxed !rounded-none !bg-transparent">${escapedCode}</code></pre>
       </div>`;
-  });
+    }
+  );
 
+  // Apply Tailwind classes to other HTML elements
   processedHtml = processedHtml
     .replace(/<h1/g, '<h1 class="text-3xl md:text-4xl font-bold text-slate-900 dark:text-slate-100 mt-8 mb-4 leading-tight"')
     .replace(/<h2/g, '<h2 class="text-2xl md:text-3xl font-bold text-slate-900 dark:text-slate-100 mt-8 mb-4 leading-tight"')
@@ -87,6 +152,7 @@ export function renderBlogContent(html: string): string {
     .replace(/<strong>/g, '<strong class="font-bold text-slate-900 dark:text-slate-100">')
     .replace(/<img /g, '<img class="w-full rounded-lg shadow-lg my-6" ');
 
+  // Handle tables
   processedHtml = processedHtml
     .replace(/<table([^>]*)>/g, (_match, attrs = "") => {
       let updatedAttrs = attrs;

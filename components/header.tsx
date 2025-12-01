@@ -12,7 +12,7 @@ const NAV_ITEMS = [
   { label: "Grow", href: "https://masteringbackend.com/#grow-succeed" },
   { label: "Blog", href: "/" },
   { label: "Community", href: "https://masteringbackend.com/community" },
-  { label: "Login", href: "https://app.masteringbackend.com/?ref=home" },
+  { label: "Login", href: "https://app.masteringbackend.com/?ref=blog" },
 ];
 
 const MAIN_NAV_ITEMS = NAV_ITEMS.filter((item) => item.label !== "Login");
@@ -22,7 +22,7 @@ export function Header() {
 
   return (
     <nav className="fixed top-0 w-full bg-white/90 dark:bg-slate-950/90 backdrop-blur-xl border-b border-slate-200/80 dark:border-slate-800/80 z-50 shadow-sm dark:shadow-slate-900/50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-2">
         <div className="flex md:grid md:grid-cols-[auto,1fr,auto] items-center justify-between h-16 relative">
           <div className="flex items-center gap-4">
             <Link href="https://masteringbackend.com" className="flex items-center">
@@ -54,8 +54,8 @@ export function Header() {
               Login
             </Link>
             <Link
-              href="/get-started"
-              className="hidden lg:inline-flex items-center px-4 py-2 rounded-lg text-white bg-[hsl(var(--primary))] hover:opacity-95 transition-all font-semibold header-cta"
+              href="https://app.masteringbackend.com?ref=blog"
+              className="hidden lg:inline-flex items-center px-4 py-2 rounded-lg hover:opacity-95 transition-all font-semibold header-cta bg-[#13AECE] text-white rounded-xl hover:bg-[#13AECE]/90 transition-colors whitespace-nowrap font-semibold shadow-lg shadow-[#13AECE]/25"
             >
               Get Started
             </Link>
@@ -95,7 +95,7 @@ export function Header() {
                 <Link
                   href="/get-started"
                   onClick={() => setOpen(false)}
-                  className="block px-3 py-2 rounded-md text-white bg-[hsl(var(--primary))] text-center font-semibold"
+                  className="block px-3 py-2 rounded-md text-white bg-[#13AECE] text-center font-semibold"
                 >
                   Get Started
                 </Link>

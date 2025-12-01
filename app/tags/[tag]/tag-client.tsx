@@ -104,7 +104,7 @@ export function TagPageClient({ tagName, posts, total }: TagPageClientProps) {
                     <div className="p-6">
                       <div className="flex items-center space-x-4 mb-3">
                         <Link
-                          href={`/category/${post.categorySlug}`}
+                          href={`/categories/${post.categorySlug}`}
                           className="text-[#13AECE] font-semibold text-sm hover:underline"
                         >
                           {post.category}
@@ -149,7 +149,7 @@ export function TagPageClient({ tagName, posts, total }: TagPageClientProps) {
                       <div className="md:w-2/3 flex flex-col justify-center">
                         <div className="flex items-center space-x-4 mb-3">
                           <Link
-                            href={`/category/${post.categorySlug}`}
+                            href={`/categories/${post.categorySlug}`}
                             className="text-[#13AECE] font-semibold text-sm hover:underline"
                           >
                             {post.category}

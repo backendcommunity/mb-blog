@@ -169,7 +169,7 @@ export function AuthorPageClient({ authorInfo, posts, total }: AuthorPageClientP
                         <div className="p-6">
                           <div className="flex items-center space-x-4 mb-3">
                             <Link
-                              href={`/category/${post.categorySlug}`}
+                              href={`/categories/${post.categorySlug}`}
                               className="text-[#13AECE] text-sm font-medium hover:underline"
                             >
                               {post.category}
@@ -218,7 +218,7 @@ export function AuthorPageClient({ authorInfo, posts, total }: AuthorPageClientP
                           <div className="md:w-2/3">
                             <div className="flex items-center space-x-4 mb-3">
                               <Link
-                                href={`/category/${post.categorySlug}`}
+                                href={`/categories/${post.categorySlug}`}
                                 className="text-[#13AECE] text-sm font-medium hover:underline"
                               >
                                 {post.category}
