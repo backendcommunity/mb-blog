@@ -1,5 +1,3 @@
-// lib/utils.ts - Enhanced version with highlight.js support
-
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 
@@ -7,11 +5,6 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
-/**
- * Convert HTML string to plain text. Uses DOMParser in the browser when available
- * for more accurate handling of entities; falls back to a simple tag-stripping
- * regex (useful in SSR/Node environments).
- */
 export function htmlToText(html?: string | null): string {
   const s = html || "";
 
@@ -21,7 +14,7 @@ export function htmlToText(html?: string | null): string {
       return doc.body.textContent || "";
     }
   } catch (e) {
-    // swallow and fallback to regex
+   
   }
 
   return String(s).replace(/<[^>]*>/g, "").trim();
@@ -41,11 +34,6 @@ function escapeHtml(text: string): string {
   return text.replace(/[&<>"']/g, m => map[m]);
 }
 
-/**
- * Render HTML content with Tailwind styles applied inline.
- * Injects classes into HTML tags for consistent typography.
- * Now uses highlight.js for proper syntax highlighting.
- */
 export function renderBlogContent(html: string): string {
   // Handle code blocks with language-specific syntax highlighting
   let processedHtml = html.replace(
