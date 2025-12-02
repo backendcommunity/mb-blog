@@ -8,6 +8,30 @@ const config: Config = {
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
     "*.{js,ts,jsx,tsx,mdx}"
   ],
+  safelist: [
+    'code-block-wrapper',
+    'code-block-header',
+    'code-block-footer',
+    'bg-[#ff5f56]',
+    'bg-[#ffbd2e]',
+    'bg-[#27c93f]',
+    'bg-[#1a2332]',
+    'bg-[#0d1117]',
+    'text-[#ff6b35]',
+    'hover:bg-[#ff5f56]/80',
+    'hover:bg-[#ffbd2e]/80',
+    'hover:bg-[#27c93f]/80',
+    'hover:text-[#ff8555]',
+    'border-slate-700/50',
+    'border-slate-800/50',
+    'text-slate-400',
+    'text-slate-500',
+    'decoration-[#ff6b35]/30',
+    'hover:decoration-[#ff8555]',
+    'space-x-2',
+    'px-6',
+    'py-6',
+  ],
   theme: {
   	extend: {
   		colors: {

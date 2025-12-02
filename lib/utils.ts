@@ -1,5 +1,6 @@
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
+import hljs from 'highlight.js'
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -47,34 +48,35 @@ export function renderBlogContent(html: string): string {
         .replace(/&quot;/g, '"')
         .replace(/&#039;/g, "'");
       
-      // Escape for safe HTML rendering
-      const escapedCode = escapeHtml(decodedCode);
+      // Apply syntax highlighting with highlight.js
+      let highlightedCode;
+      try {
+        if (lang && hljs.getLanguage(lang)) {
+          highlightedCode = hljs.highlight(decodedCode, { language: lang }).value;
+        } else {
+          highlightedCode = hljs.highlightAuto(decodedCode).value;
+        }
+      } catch (e) {
+        highlightedCode = escapeHtml(decodedCode);
+      }
       
-      return `<div class="code-block-wrapper my-8 rounded-xl overflow-hidden shadow-2xl border border-slate-800/70 bg-gradient-to-br from-slate-900 via-slate-900 to-slate-950" data-code-block>
-        <div class="code-block-header bg-gradient-to-r from-slate-800 to-slate-900 px-4 py-3 flex items-center justify-between border-b border-slate-700">
+      return `<div class="code-block-wrapper my-8 rounded-2xl overflow-hidden shadow-2xl border border-slate-700/50" data-code-block>
+        <div class="code-block-header bg-[#1a2332] px-5 py-3.5 border-b border-slate-700/50">
           <div class="flex items-center space-x-2">
-            <div class="flex space-x-1.5">
-              <div class="w-3 h-3 rounded-full bg-red-500 hover:bg-red-400 cursor-pointer transition-colors"></div>
-              <div class="w-3 h-3 rounded-full bg-yellow-500 hover:bg-yellow-400 cursor-pointer transition-colors"></div>
-              <div class="w-3 h-3 rounded-full bg-green-500 hover:bg-green-400 cursor-pointer transition-colors"></div>
-            </div>
-            <span class="text-slate-300 text-xs font-medium ml-3 uppercase tracking-wider">${lang}</span>
+            <div class="w-3 h-3 rounded-full bg-[#ff5f56] hover:bg-[#ff5f56]/80 cursor-pointer transition-colors shadow-sm"></div>
+            <div class="w-3 h-3 rounded-full bg-[#ffbd2e] hover:bg-[#ffbd2e]/80 cursor-pointer transition-colors shadow-sm"></div>
+            <div class="w-3 h-3 rounded-full bg-[#27c93f] hover:bg-[#27c93f]/80 cursor-pointer transition-colors shadow-sm"></div>
           </div>
-          <button onclick="
-            const code = this.closest('.code-block-wrapper').querySelector('code').textContent.trim();
-            navigator.clipboard.writeText(code);
-            const originalText = this.textContent;
-            this.textContent = 'Copied!';
-            this.classList.add('!text-green-400', '!border-green-400');
-            setTimeout(() => {
-              this.textContent = originalText;
-              this.classList.remove('!text-green-400', '!border-green-400');
-            }, 2000);
-          " class="px-3 py-1 text-xs font-medium text-slate-300 hover:text-white rounded-md transition-all border border-slate-700 hover:bg-slate-700 hover:border-slate-600 active:scale-95">
-            Copy
-          </button>
         </div>
-        <pre class="!my-0 !border-0 !shadow-none !rounded-none bg-gradient-to-br from-slate-900 via-slate-900 to-slate-950"><code class="hljs language-${lang} block p-6 overflow-x-auto text-sm md:text-base leading-relaxed !rounded-none !bg-transparent" data-lang="${lang}">${escapedCode}</code></pre>
+        <div class="bg-[#0d1117] px-6 py-6">
+          <pre class="!my-0 !border-0 !shadow-none !rounded-none bg-transparent"><code class="hljs language-${lang} block overflow-x-auto text-[15px] leading-relaxed !rounded-none !bg-transparent" data-lang="${lang}">${highlightedCode}</code></pre>
+        </div>
+        <div class="code-block-footer bg-[#0d1117] px-6 py-3.5 border-t border-slate-800/50 flex items-center justify-end">
+          <div class="text-sm">
+            <span class="text-slate-400">Use our </span>
+            <a href="https://playground.masteringbackend.com/javascript/?ref=masteringbackend&utm_source=masteringbackend&utm_medium=custom_code_editor&utm_campaign=blog-post" target="_blank" rel="noopener noreferrer" class="text-[#ff6b35] hover:text-[#ff8555] font-semibold transition-colors underline decoration-[#ff6b35]/30 hover:decoration-[#ff8555]">Online Code Editor</a>
+          </div>
+        </div>
       </div>`;
     }
   );
@@ -90,33 +92,31 @@ export function renderBlogContent(html: string): string {
         .replace(/&quot;/g, '"')
         .replace(/&#039;/g, "'");
       
-      const escapedCode = escapeHtml(decodedCode);
+      // Apply auto-detection syntax highlighting
+      let highlightedCode;
+      try {
+        highlightedCode = hljs.highlightAuto(decodedCode).value;
+      } catch (e) {
+        highlightedCode = escapeHtml(decodedCode);
+      }
       
-      return `<div class="code-block-wrapper my-8 rounded-xl overflow-hidden shadow-2xl border border-slate-800/70 bg-gradient-to-br from-slate-900 via-slate-900 to-slate-950" data-code-block>
-        <div class="code-block-header bg-gradient-to-r from-slate-800 to-slate-900 px-4 py-3 flex items-center justify-between border-b border-slate-700">
+      return `<div class="code-block-wrapper my-8 rounded-2xl overflow-hidden shadow-2xl border border-slate-700/50" data-code-block>
+        <div class="code-block-header bg-[#1a2332] px-5 py-3.5 border-b border-slate-700/50">
           <div class="flex items-center space-x-2">
-            <div class="flex space-x-1.5">
-              <div class="w-3 h-3 rounded-full bg-red-500 hover:bg-red-400 cursor-pointer transition-colors"></div>
-              <div class="w-3 h-3 rounded-full bg-yellow-500 hover:bg-yellow-400 cursor-pointer transition-colors"></div>
-              <div class="w-3 h-3 rounded-full bg-green-500 hover:bg-green-400 cursor-pointer transition-colors"></div>
-            </div>
-            <span class="text-slate-300 text-xs font-medium ml-3 uppercase tracking-wider">code</span>
+            <div class="w-3 h-3 rounded-full bg-[#ff5f56] hover:bg-[#ff5f56]/80 cursor-pointer transition-colors shadow-sm"></div>
+            <div class="w-3 h-3 rounded-full bg-[#ffbd2e] hover:bg-[#ffbd2e]/80 cursor-pointer transition-colors shadow-sm"></div>
+            <div class="w-3 h-3 rounded-full bg-[#27c93f] hover:bg-[#27c93f]/80 cursor-pointer transition-colors shadow-sm"></div>
           </div>
-          <button onclick="
-            const code = this.closest('.code-block-wrapper').querySelector('code').textContent.trim();
-            navigator.clipboard.writeText(code);
-            const originalText = this.textContent;
-            this.textContent = 'Copied!';
-            this.classList.add('!text-green-400', '!border-green-400');
-            setTimeout(() => {
-              this.textContent = originalText;
-              this.classList.remove('!text-green-400', '!border-green-400');
-            }, 2000);
-          " class="px-3 py-1 text-xs font-medium text-slate-300 hover:text-white rounded-md transition-all border border-slate-700 hover:bg-slate-700 hover:border-slate-600 active:scale-95">
-            Copy
-          </button>
         </div>
-        <pre class="!my-0 !border-0 !shadow-none !rounded-none bg-gradient-to-br from-slate-900 via-slate-900 to-slate-950"><code class="hljs block p-6 overflow-x-auto text-sm md:text-base leading-relaxed !rounded-none !bg-transparent">${escapedCode}</code></pre>
+        <div class="bg-[#0d1117] px-6 py-6">
+          <pre class="!my-0 !border-0 !shadow-none !rounded-none bg-transparent"><code class="hljs block overflow-x-auto text-[15px] leading-relaxed !rounded-none !bg-transparent">${highlightedCode}</code></pre>
+        </div>
+        <div class="code-block-footer bg-[#0d1117] px-6 py-3.5 border-t border-slate-800/50 flex items-center justify-end">
+          <div class="text-sm">
+            <span class="text-slate-400">Use our </span>
+            <a href="https://playground.masteringbackend.com/javascript/?ref=masteringbackend&utm_source=masteringbackend&utm_medium=custom_code_editor&utm_campaign=blog-post" target="_blank" rel="noopener noreferrer" class="text-[#ff6b35] hover:text-[#ff8555] font-semibold transition-colors underline decoration-[#ff6b35]/30 hover:decoration-[#ff8555]">Online Code Editor</a>
+          </div>
+        </div>
       </div>`;
     }
   );

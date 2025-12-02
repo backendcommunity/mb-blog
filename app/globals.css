@@ -115,11 +115,46 @@
 
   /* Apple-style code block with macOS window controls */
   .code-block-wrapper {
-    @apply my-8 rounded-xl overflow-hidden shadow-2xl;
+    @apply my-8 rounded-2xl overflow-hidden shadow-2xl;
   }
 
   .code-block-header {
-    @apply px-4 py-3 flex items-center justify-between;
+    @apply px-5 py-3.5;
+  }
+
+  /* Ensure macOS dots are visible with explicit colors */
+  .code-block-header .bg-\[\#ff5f56\] {
+    background-color: #ff5f56 !important;
+  }
+
+  .code-block-header .bg-\[\#ffbd2e\] {
+    background-color: #ffbd2e !important;
+  }
+
+  .code-block-header .bg-\[\#27c93f\] {
+    background-color: #27c93f !important;
+  }
+
+  .code-block-header .bg-\[\#1a2332\] {
+    background-color: #1a2332 !important;
+  }
+
+  .code-block-wrapper .bg-\[\#0d1117\] {
+    background-color: #0d1117 !important;
+  }
+
+  .code-block-footer {
+    @apply px-6 py-3.5 flex items-center justify-end;
+  }
+
+  /* Footer link styling */
+  .code-block-footer a {
+    color: #ff6b35 !important;
+    font-weight: 600;
+  }
+
+  .code-block-footer a:hover {
+    color: #ff8555 !important;
   }
 
   .code-block-wrapper pre {
@@ -127,12 +162,14 @@
   }
 
   .code-block-wrapper pre code {
-    @apply block p-6 overflow-x-auto text-sm md:text-base leading-relaxed font-mono rounded-none text-white;
+    @apply block px-6 py-5 overflow-x-auto text-[15px] leading-relaxed font-mono rounded-none;
+    background: transparent !important;
   }
 
-  /* Remove syntax highlighting colors from code blocks */
-  .code-block-wrapper pre code * {
-    color: rgb(226, 232, 240) !important;
+  /* Ensure highlight.js colors are preserved */
+  .code-block-wrapper pre code.hljs {
+    background: transparent !important;
+    padding: 0;
   }
 
   /* Fallback for pre without wrapper */
@@ -224,13 +261,24 @@
       @apply px-2;
     }
     
-    .code-block-wrapper pre code,
-    pre code {
-      @apply text-xs p-4;
+    .code-block-wrapper pre code {
+      @apply text-xs;
     }
 
     .code-block-header {
-      @apply px-3 py-1.5 text-xs;
+      @apply px-4 py-2.5 text-xs;
+    }
+
+    .code-block-footer {
+      @apply px-4 py-2.5 text-xs;
+    }
+
+    .code-block-wrapper .bg-\[\#0d1117\] {
+      @apply px-4 py-4;
+    }
+    
+    pre:not(.code-block-wrapper pre) code {
+      @apply text-xs p-4;
     }
   }
 }
