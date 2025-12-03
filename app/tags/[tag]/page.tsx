@@ -3,11 +3,11 @@ import { notFound } from "next/navigation";
 import { TagPageClient } from "./tag-client";
 
 interface TagPageProps {
-  params: { tag: string };
+  params: Promise<{ tag: string }>;
 }
 
 export default async function TagPage({ params }: TagPageProps) {
-  const { tag: tagSlug } = params;
+  const { tag: tagSlug } = await params;
   const { posts, total } = await getPostsByTag({ slug: tagSlug, count: 100 });
   if (posts.length === 0) { notFound(); }
   const tagName = (() => {

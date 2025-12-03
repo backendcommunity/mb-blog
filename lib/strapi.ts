@@ -14,11 +14,9 @@ function calculateReadTime(content: string): string {
 // Map Strapi post to frontend BlogPost format
 export function mapPost(strapiPost: StrapiPost): BlogPost {
   const { id, attributes } = strapiPost;
-  
   const category = attributes.categories?.data?.[0];
   const author = attributes.author?.data;
   const featuredImage = attributes.featured_image?.data?.attributes;
-  
   return {
     id,
     title: attributes.title,
@@ -43,6 +41,23 @@ export function mapPost(strapiPost: StrapiPost): BlogPost {
     likes: Math.floor(Math.random() * 200) + 50, // Mock data
     comments: Math.floor(Math.random() * 50) + 5, // Mock data
     bookmarks: Math.floor(Math.random() * 100) + 20, // Mock data
+    type: attributes.type,
+    color: attributes.color,
+    chapters: attributes.chapters?.data?.map(chapter => ({
+      id: chapter.id,
+      title: chapter.attributes.title,
+      slug: chapter.attributes.slug,
+      description: chapter.attributes.description,
+      color: chapter.attributes.color,
+      featured_image: chapter.attributes.featured_image?.data?.attributes?.url,
+      posts: chapter.attributes.posts?.data?.map((post: StrapiPost) => {
+        // Ensure chapter posts have content populated
+        return {
+          ...mapPost(post),
+          // If content is missing, we'll show a fallback in the component
+        };
+      }) || []
+    })) || []
   };
 }
 
@@ -89,7 +104,7 @@ export async function getPosts({
     const response = await fetchStrapi<StrapiResponse<StrapiPost[]>>(
       `/posts?filters[is_public][$eq]=true&pagination[page]=${page}&pagination[pageSize]=${count}&sort[1]=createdAt%3Adesc&populate=${populate}`
     );
-    
+    // console.log(response.data);
     return {
       posts: mapPosts(response.data),
       pages: response.meta.pagination?.pageCount || 1,
@@ -129,8 +144,8 @@ export async function getRecentPosts(count = 6): Promise<BlogPost[]> {
   }
 }
 
-// Get single post by slug
-export async function getPostBySlug(slug: string, populate = '*'): Promise<BlogPost | null> {
+// Get single post by slug  
+export async function getPostBySlug(slug: string, populate = 'author,categories,tags,featured_image,chapters.posts,chapters.featured_image'): Promise<BlogPost | null> {
   try {
     const response = await fetchStrapi<StrapiResponse<StrapiPost[]>>(
       `/posts?filters[slug][$eq]=${slug}&populate=${populate}`
@@ -139,6 +154,7 @@ export async function getPostBySlug(slug: string, populate = '*'): Promise<BlogP
     if (response.data.length > 0) {
       return mapPost(response.data[0]);
     }
+    // console.log(response.data);
     
     return null;
   } catch (error) {
@@ -219,7 +235,7 @@ export async function getPostsByAuthor({
     const response = await fetchStrapi<StrapiResponse<StrapiPost[]>>(
       `/posts?filters[is_public][$eq]=true&filters[author][slug][$eq]=${slug}&pagination[page]=${page}&pagination[pageSize]=${count}&populate=${populate}`
     );
-    
+    // console.log(response.data);
     return {
       posts: mapPosts(response.data),
       pages: response.meta.pagination?.pageCount || 1,
@@ -251,6 +267,7 @@ export async function getRelatedPosts(postId: number, categorySlug: string, coun
     const response = await fetchStrapi<StrapiResponse<StrapiPost[]>>(
       `/posts?filters[is_public][$eq]=true&filters[categories][slug][$eq]=${categorySlug}&filters[id][$ne]=${postId}&pagination[pageSize]=${count}&populate=*`
     );
+    // console.log(response.data);
     
     return mapPosts(response.data);
   } catch (error) {

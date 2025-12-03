@@ -32,7 +32,16 @@ export interface StrapiChapter {
   id: number;
   title: string;
   slug: string;
-  posts?: StrapiPost[];
+  description?: string;
+  color?: string;
+  featured_image?: {
+    data?: {
+      attributes: StrapiImage;
+    };
+  };
+  posts?: {
+    data: StrapiPost[];
+  };
 }
 
 export interface StrapiPostAttributes {
@@ -42,6 +51,7 @@ export interface StrapiPostAttributes {
   content: string;
   is_public: boolean;
   type?: string;
+  color?: string;
   featured_image?: {
     data?: {
       attributes: StrapiImage;
@@ -118,6 +128,19 @@ export interface BlogPost {
   likes?: number;
   comments?: number;
   bookmarks?: number;
+  type?: string;
+  color?: string;
+  chapters?: Chapter[];
+}
+
+export interface Chapter {
+  id: number;
+  title: string;
+  slug: string;
+  description?: string;
+  color?: string;
+  featured_image?: string;
+  posts?: BlogPost[];
 }
 
 export interface PostsResponse {

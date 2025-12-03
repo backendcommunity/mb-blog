@@ -19,6 +19,8 @@ import {
 import { BrandLogo } from "@/components/brand-logo";
 import { ThemeToggle } from "@/components/theme-toggle";
 import Header from "@/components/header";
+import { DefinitiveArticleOverview } from "@/components/definitive-article-overview";
+import { ArticleOverview } from "@/components/article-overview";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import type { Components } from "react-markdown";
@@ -100,6 +102,7 @@ export function BlogPostClient({ blogPost, relatedPosts }: BlogPostClientProps) 
   };
 
   const excerptText = htmlToText(blogPost.excerpt);
+  const isDefinitiveGuide = blogPost.type === 'definitive' && blogPost.chapters && blogPost.chapters.length > 0;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 transition-colors duration-300 font-sans">
@@ -118,127 +121,133 @@ export function BlogPostClient({ blogPost, relatedPosts }: BlogPostClientProps) 
         </div>
       </div>
 
-      {/* Article Header */}
-      <header className="px-4 sm:px-6 lg:px-8 pb-8">
-        <div className="max-w-4xl mx-auto">
-          {/* Category and Meta */}
-          <div className="flex flex-wrap items-center gap-4 mb-6">
-            <Link
-              href={`/categories/${blogPost.categorySlug}`}
-              className="bg-gradient-to-r from-[#13AECE] to-[#0891b2] text-white px-4 py-1.5 rounded-full text-sm font-medium hover:shadow-xl hover:shadow-[#13AECE]/30 transition-all hover:scale-105 shadow-lg shadow-[#13AECE]/20"
-            >
-              {blogPost.category}
-            </Link>
-            <div className="flex items-center space-x-4 text-slate-500 dark:text-slate-500 text-sm">
-              <div className="flex items-center space-x-1">
-                <Calendar className="w-4 h-4" />
-                <span>
-                  {new Date(blogPost.publishedAt).toLocaleDateString()}
-                </span>
-              </div>
-              <div className="flex items-center space-x-1">
-                <Clock className="w-4 h-4" />
-                <span>{blogPost.readTime}</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Title */}
-          <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 dark:from-white dark:via-slate-100 dark:to-white bg-clip-text text-transparent mb-6 leading-tight">
-            {blogPost.title}
-          </h1>
-
-          {/* Author and Actions */}
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8">
-            <Link
-              href={`/author/${blogPost.author.slug}`}
-              className="flex items-center space-x-4 group"
-            >
-              <div className="w-16 h-16 bg-gradient-to-br from-[#13AECE]/20 to-[#0891b2]/20 rounded-full flex items-center justify-center text-[#13AECE] font-bold text-xl border-2 border-[#13AECE]/30 shadow-lg shadow-[#13AECE]/10">
-                  {blogPost.author.avatar || blogPost.author.name.substring(0, 2).toUpperCase()}
-              </div>
-              <div>
-                <p className="text-lg font-semibold text-slate-900 dark:text-white group-hover:text-[#13AECE] transition-colors">
-                  {blogPost.author.name}
-                </p>
-                <p className="text-slate-500 dark:text-slate-500 text-sm line-clamp-1">
-                  {blogPost.author.bio}
-                </p>
-              </div>
-            </Link>
-
-            {/* Action Buttons */}
-            <div className="flex items-center space-x-4">
-             
-              <div className="relative">
-                <button
-                  onClick={() => setShowShareMenu(!showShareMenu)}
-                  className="flex items-center space-x-2 px-4 py-2.5 bg-slate-100 dark:bg-slate-800/50 text-slate-600 dark:text-slate-300 rounded-xl hover:bg-slate-200 dark:hover:bg-slate-700 transition-all hover:scale-105 border border-slate-200 dark:border-slate-700"
+      {/* Article Overview */}
+      <div className="px-4 sm:px-6 lg:px-8 pb-8">
+        <div className="max-w-4xl mx-auto relative">
+          {isDefinitiveGuide ? (
+            <DefinitiveArticleOverview post={blogPost} />
+          ) : (
+            <>
+              {/* Category and Meta */}
+              <div className="flex flex-wrap items-center gap-4 mb-6">
+                <Link
+                  href={`/categories/${blogPost.categorySlug}`}
+                  className="bg-gradient-to-r from-[#13AECE] to-[#0891b2] text-white px-4 py-1.5 rounded-full text-sm font-medium hover:shadow-xl hover:shadow-[#13AECE]/30 transition-all hover:scale-105 shadow-lg shadow-[#13AECE]/20"
                 >
-                  <Share2 className="w-4 h-4" />
-                  <span>Share</span>
-                </button>
-
-                {showShareMenu && (
-                  <div className="absolute top-full right-0 mt-2 bg-white dark:bg-slate-800/95 backdrop-blur-xl border border-slate-200 dark:border-slate-700 rounded-xl shadow-2xl p-2 z-10 min-w-[160px]">
-                    <button
-                      onClick={() => handleShare("twitter")}
-                      className="flex items-center space-x-3 w-full px-4 py-2 text-left hover:bg-slate-50 dark:hover:bg-slate-700/50 rounded-lg transition-colors text-slate-700 dark:text-slate-200"
-                    >
-                      <Twitter className="w-4 h-4" />
-                      <span>Twitter</span>
-                    </button>
-                    <button
-                      onClick={() => handleShare("linkedin")}
-                      className="flex items-center space-x-3 w-full px-4 py-2 text-left hover:bg-slate-50 dark:hover:bg-slate-700/50 rounded-lg transition-colors text-slate-700 dark:text-slate-200"
-                    >
-                      <Linkedin className="w-4 h-4" />
-                      <span>LinkedIn</span>
-                    </button>
-                    <button
-                      onClick={() => handleShare("facebook")}
-                      className="flex items-center space-x-3 w-full px-4 py-2 text-left hover:bg-slate-50 dark:hover:bg-slate-700/50 rounded-lg transition-colors text-slate-700 dark:text-slate-200"
-                    >
-                      <Facebook className="w-4 h-4" />
-                      <span>Facebook</span>
-                    </button>
-                    <button
-                      onClick={() => handleShare("copy")}
-                      className="flex items-center space-x-3 w-full px-4 py-2 text-left hover:bg-slate-50 dark:hover:bg-slate-700/50 rounded-lg transition-colors text-slate-700 dark:text-slate-200"
-                    >
-                      {copied ? (
-                        <Check className="w-4 h-4 text-green-500" />
-                      ) : (
-                        <Copy className="w-4 h-4" />
-                      )}
-                      <span>{copied ? "Copied!" : "Copy Link"}</span>
-                    </button>
+                  {blogPost.category}
+                </Link>
+                <div className="flex items-center space-x-4 text-slate-500 dark:text-slate-500 text-sm">
+                  <div className="flex items-center space-x-1">
+                    <Calendar className="w-4 h-4" />
+                    <span>
+                      {new Date(blogPost.publishedAt).toLocaleDateString()}
+                    </span>
                   </div>
-                )}
+                  <div className="flex items-center space-x-1">
+                    <Clock className="w-4 h-4" />
+                    <span>{blogPost.readTime}</span>
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
 
-          {/* Featured Image */}
-          <div className="aspect-video bg-slate-100 dark:bg-slate-800 rounded-3xl overflow-hidden mb-12 shadow-2xl shadow-slate-200/50 dark:shadow-slate-900/50 ring-1 ring-slate-200 dark:ring-slate-700">
-            <img
-              src={blogPost.image || "/placeholder.svg"}
-              alt={blogPost.title}
-              className="w-full h-full object-cover"
-            />
-          </div>
+              {/* Title */}
+              <h1 className="text-4xl md:text-6xl font-bold bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 dark:from-white dark:via-slate-100 dark:to-white bg-clip-text text-transparent mb-6 leading-tight">
+                {blogPost.title}
+              </h1>
+
+              {/* Author and Actions */}
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8">
+                <Link
+                  href={`/author/${blogPost.author.slug}`}
+                  className="flex items-center space-x-4 group"
+                >
+                  <div className="w-16 h-16 bg-gradient-to-br from-[#13AECE]/20 to-[#0891b2]/20 rounded-full flex items-center justify-center text-[#13AECE] font-bold text-xl border-2 border-[#13AECE]/30 shadow-lg shadow-[#13AECE]/10">
+                      {blogPost.author.avatar || blogPost.author.name.substring(0, 2).toUpperCase()}
+                  </div>
+                  <div>
+                    <p className="text-lg font-semibold text-slate-900 dark:text-white group-hover:text-[#13AECE] transition-colors">
+                      {blogPost.author.name}
+                    </p>
+                    <p className="text-slate-500 dark:text-slate-500 text-sm line-clamp-1">
+                      {blogPost.author.bio}
+                    </p>
+                  </div>
+                </Link>
+
+                {/* Action Buttons */}
+                <div className="flex items-center space-x-4">
+                 
+                  <div className="relative">
+                    <button
+                      onClick={() => setShowShareMenu(!showShareMenu)}
+                      className="flex items-center space-x-2 px-4 py-2.5 bg-slate-100 dark:bg-slate-800/50 text-slate-600 dark:text-slate-300 rounded-xl hover:bg-slate-200 dark:hover:bg-slate-700 transition-all hover:scale-105 border border-slate-200 dark:border-slate-700"
+                    >
+                      <Share2 className="w-4 h-4" />
+                      <span>Share</span>
+                    </button>
+
+                    {showShareMenu && (
+                      <div className="absolute top-full right-0 mt-2 bg-white dark:bg-slate-800/95 backdrop-blur-xl border border-slate-200 dark:border-slate-700 rounded-xl shadow-2xl p-2 z-10 min-w-[160px]">
+                        <button
+                          onClick={() => handleShare("twitter")}
+                          className="flex items-center space-x-3 w-full px-4 py-2 text-left hover:bg-slate-50 dark:hover:bg-slate-700/50 rounded-lg transition-colors text-slate-700 dark:text-slate-200"
+                        >
+                          <Twitter className="w-4 h-4" />
+                          <span>Twitter</span>
+                        </button>
+                        <button
+                          onClick={() => handleShare("linkedin")}
+                          className="flex items-center space-x-3 w-full px-4 py-2 text-left hover:bg-slate-50 dark:hover:bg-slate-700/50 rounded-lg transition-colors text-slate-700 dark:text-slate-200"
+                        >
+                          <Linkedin className="w-4 h-4" />
+                          <span>LinkedIn</span>
+                        </button>
+                        <button
+                          onClick={() => handleShare("facebook")}
+                          className="flex items-center space-x-3 w-full px-4 py-2 text-left hover:bg-slate-50 dark:hover:bg-slate-700/50 rounded-lg transition-colors text-slate-700 dark:text-slate-200"
+                        >
+                          <Facebook className="w-4 h-4" />
+                          <span>Facebook</span>
+                        </button>
+                        <button
+                          onClick={() => handleShare("copy")}
+                          className="flex items-center space-x-3 w-full px-4 py-2 text-left hover:bg-slate-50 dark:hover:bg-slate-700/50 rounded-lg transition-colors text-slate-700 dark:text-slate-200"
+                        >
+                          {copied ? (
+                            <Check className="w-4 h-4 text-green-500" />
+                          ) : (
+                            <Copy className="w-4 h-4" />
+                          )}
+                          <span>{copied ? "Copied!" : "Copy Link"}</span>
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* Featured Image */}
+              <div className="aspect-video bg-slate-100 dark:bg-slate-800 rounded-3xl overflow-hidden mb-12 shadow-2xl shadow-slate-200/50 dark:shadow-slate-900/50 ring-1 ring-slate-200 dark:ring-slate-700">
+                <img
+                  src={blogPost.image || "/placeholder.svg"}
+                  alt={blogPost.title}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            </>
+          )}
         </div>
-      </header>
+      </div>
 
       {/* Article Content */}
       <main className="px-4 sm:px-6 lg:px-8 pb-16">
         <div className="max-w-4xl mx-auto">
-          <div
+          {/* <div
             className="article-content max-w-none overflow-x-hidden break-words"
             dangerouslySetInnerHTML={{
               __html: renderBlogContent(blogPost.content),
             }}
-          />
+          /> */}
 
           {/* Tags */}
           <div className="mt-16 pt-8 border-t border-slate-200 dark:border-slate-700">

@@ -162,3 +162,59 @@ export function renderBlogContent(html: string): string {
 
   return processedHtml;
 }
+
+/**
+ * Get color classes based on color name
+ */
+export function getColorClasses(color?: string) {
+  switch (color?.toLowerCase()) {
+    case 'blue':
+      return {
+        bg: 'from-blue-500 to-blue-600',
+        border: 'border-blue-200 dark:border-blue-800',
+        text: 'text-blue-600 dark:text-blue-400',
+        accent: 'bg-blue-50 dark:bg-blue-900/20',
+        button: 'bg-blue-600 hover:bg-blue-700'
+      };
+    case 'green':
+      return {
+        bg: 'from-green-500 to-green-600',
+        border: 'border-green-200 dark:border-green-800',
+        text: 'text-green-600 dark:text-green-400',
+        accent: 'bg-green-50 dark:bg-green-900/20',
+        button: 'bg-green-600 hover:bg-green-700'
+      };
+    case 'purple':
+      return {
+        bg: 'from-purple-500 to-purple-600',
+        border: 'border-purple-200 dark:border-purple-800',
+        text: 'text-purple-600 dark:text-purple-400',
+        accent: 'bg-purple-50 dark:bg-purple-900/20',
+        button: 'bg-purple-600 hover:bg-purple-700'
+      };
+    case 'red':
+      return {
+        bg: 'from-red-500 to-red-600',
+        border: 'border-red-200 dark:border-red-800',
+        text: 'text-red-600 dark:text-red-400',
+        accent: 'bg-red-50 dark:bg-red-900/20',
+        button: 'bg-red-600 hover:bg-red-700'
+      };
+    case 'orange':
+      return {
+        bg: 'from-orange-500 to-orange-600',
+        border: 'border-orange-200 dark:border-orange-800',
+        text: 'text-orange-600 dark:text-orange-400',
+        accent: 'bg-orange-50 dark:bg-orange-900/20',
+        button: 'bg-orange-600 hover:bg-orange-700'
+      };
+    default:
+      return {
+        bg: 'from-[#13AECE] to-[#0891b2]',
+        border: 'border-[#13AECE]/20 dark:border-[#13AECE]/30',
+        text: 'text-[#13AECE]',
+        accent: 'bg-[#13AECE]/5 dark:bg-[#13AECE]/10',
+        button: 'bg-[#13AECE] hover:bg-[#0891b2]'
+      };
+  }
+}

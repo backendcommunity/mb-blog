@@ -15,7 +15,7 @@ import type { BlogPost } from "@/lib/types";
 function extractCategories(posts: BlogPost[]): string[] {
   const categories = new Set<string>();
   posts.forEach(post => {
-    if (post.category) {
+    if (post.category && post.category !== 'Uncategorized') {
       categories.add(post.category);
     }
   });
