@@ -129,7 +129,7 @@ export function renderBlogContent(html: string): string {
     .replace(/<h4/g, '<h4 class="text-lg font-semibold text-slate-900 dark:text-slate-100 mt-5 mb-3"')
     .replace(/<h5/g, '<h5 class="text-base font-semibold text-slate-900 dark:text-slate-100 mt-4 mb-2"')
     .replace(/<h6/g, '<h6 class="text-sm font-semibold text-slate-900 dark:text-slate-100 mt-3 mb-2"')
-    .replace(/<p>/g, '<p class="text-lg md:text-xl font-medium text-slate-700 dark:text-slate-300 leading-relaxed mb-6">')
+    .replace(/<p>/g, '<p class="text-lg md:text-xl text-slate-700 dark:text-slate-300 leading-relaxed mb-6">')
     .replace(/<a /g, '<a class="text-[hsl(var(--primary))] hover:text-[hsl(var(--primary))]/80 underline transition-colors" ')
     .replace(/<ul>/g, '<ul class="list-disc pl-6 mb-6 space-y-3 text-lg md:text-xl text-slate-700 dark:text-slate-300">')
     .replace(/<ol>/g, '<ol class="list-decimal pl-6 mb-6 space-y-3 text-lg md:text-xl text-slate-700 dark:text-slate-300">')

@@ -33,6 +33,8 @@ export interface StrapiChapter {
   title: string;
   slug: string;
   description?: string;
+  summary?: string;
+  content?: string;
   color?: string;
   featured_image?: {
     data?: {
@@ -138,6 +140,8 @@ export interface Chapter {
   title: string;
   slug: string;
   description?: string;
+  summary?: string;
+  content?: string;
   color?: string;
   featured_image?: string;
   posts?: BlogPost[];

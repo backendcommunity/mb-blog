@@ -48,13 +48,13 @@ export function mapPost(strapiPost: StrapiPost): BlogPost {
       title: chapter.attributes.title,
       slug: chapter.attributes.slug,
       description: chapter.attributes.description,
+      summary: chapter.attributes.summary,
+      content: chapter.attributes.content,
       color: chapter.attributes.color,
       featured_image: chapter.attributes.featured_image?.data?.attributes?.url,
       posts: chapter.attributes.posts?.data?.map((post: StrapiPost) => {
-        // Ensure chapter posts have content populated
         return {
           ...mapPost(post),
-          // If content is missing, we'll show a fallback in the component
         };
       }) || []
     })) || []
@@ -145,7 +145,7 @@ export async function getRecentPosts(count = 6): Promise<BlogPost[]> {
 }
 
 // Get single post by slug  
-export async function getPostBySlug(slug: string, populate = 'author,categories,tags,featured_image,chapters.posts,chapters.featured_image'): Promise<BlogPost | null> {
+export async function getPostBySlug(slug: string, populate = 'author,categories,tags,featured_image,chapters.posts.author,chapters.posts.categories,chapters.posts.featured_image,chapters.featured_image'): Promise<BlogPost | null> {
   try {
     const response = await fetchStrapi<StrapiResponse<StrapiPost[]>>(
       `/posts?filters[slug][$eq]=${slug}&populate=${populate}`

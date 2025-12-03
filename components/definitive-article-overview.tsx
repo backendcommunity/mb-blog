@@ -281,6 +281,18 @@ export function DefinitiveArticleOverview({ post }: DefinitiveArticleOverviewPro
                 </div>
               </div>
 
+              {/* Chapter Content (for chapters without posts, like Conclusion) */}
+              {chapterPosts.length === 0 && (chapter.content || chapter.summary) && (
+                <div className="bg-white dark:bg-slate-800 rounded-lg md:rounded-xl border border-slate-200 dark:border-slate-700 overflow-hidden shadow-sm p-4 md:p-6">
+                  <div 
+                    className="article-content max-w-none overflow-x-hidden break-words"
+                    dangerouslySetInnerHTML={{
+                      __html: renderBlogContent(chapter.content || chapter.summary || '')
+                    }}
+                  />
+                </div>
+              )}
+
               {/* Chapter Posts Content */}
               {chapterPosts.length > 0 && (
                 <div className="space-y-4 md:space-y-6">
@@ -326,7 +338,7 @@ export function DefinitiveArticleOverview({ post }: DefinitiveArticleOverviewPro
                       <div className="p-4 md:p-6">
                         {chapterPost.content ? (
                           <div 
-                            className="article-content prose prose-sm md:prose-base prose-slate max-w-none dark:prose-invert prose-headings:font-bold prose-headings:text-slate-900 dark:prose-headings:text-white prose-p:text-slate-700 dark:prose-p:text-slate-300 prose-a:text-blue-600 dark:prose-a:text-blue-400 prose-code:text-blue-600 dark:prose-code:text-blue-400 prose-pre:bg-slate-900 dark:prose-pre:bg-slate-800 prose-pre:overflow-x-auto"
+                            className="article-content max-w-none overflow-x-hidden break-words"
                             dangerouslySetInnerHTML={{
                               __html: renderBlogContent(chapterPost.content)
                             }}

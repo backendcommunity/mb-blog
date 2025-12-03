@@ -242,12 +242,14 @@ export function BlogPostClient({ blogPost, relatedPosts }: BlogPostClientProps) 
       {/* Article Content */}
       <main className="px-4 sm:px-6 lg:px-8 pb-16">
         <div className="max-w-4xl mx-auto">
-          {/* <div
-            className="article-content max-w-none overflow-x-hidden break-words"
-            dangerouslySetInnerHTML={{
-              __html: renderBlogContent(blogPost.content),
-            }}
-          /> */}
+          {!isDefinitiveGuide && (
+            <div
+              className="article-content max-w-none overflow-x-hidden break-words"
+              dangerouslySetInnerHTML={{
+                __html: renderBlogContent(blogPost.content),
+              }}
+            />
+          )}
 
           {/* Tags */}
           <div className="mt-16 pt-8 border-t border-slate-200 dark:border-slate-700">
