@@ -1,11 +1,8 @@
 import type React from "react";
-import { Inter } from "next/font/google";
 import "./globals.css";
 import "highlight.js/styles/atom-one-dark.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { cn } from "@/lib/utils";
-
-const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
 export const metadata = {
   title: "Masteringbackend - Backend Engineering Insights",
@@ -29,8 +26,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body
         className={cn(
-          "min-h-screen bg-background font-sans antialiased",
-          inter.variable
+          "min-h-screen bg-background font-sans antialiased"
         )}
       >
         <ThemeProvider
