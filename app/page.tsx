@@ -1,11 +1,6 @@
 import Link from "next/link";
-import {
-  Github,
-  Twitter,
-  Linkedin,
-} from "lucide-react";
+import { Github, Twitter, Linkedin } from "lucide-react";
 import { BrandLogo } from "@/components/brand-logo";
-import { ThemeToggle } from "@/components/theme-toggle";
 import Header from "@/components/header";
 import { BlogList } from "@/components/blog-list";
 import { getPosts, getStickyPosts } from "@/lib/strapi";
@@ -14,13 +9,19 @@ import type { BlogPost } from "@/lib/types";
 // Extract unique categories from posts
 function extractCategories(posts: BlogPost[]): string[] {
   const categories = new Set<string>();
-  posts.forEach(post => {
-    if (post.category && post.category !== 'Uncategorized') {
+  posts.forEach((post) => {
+    if (post.category && post.category !== "Uncategorized") {
       categories.add(post.category);
     }
   });
   return ["All", ...Array.from(categories).sort()];
 }
+
+const style = {
+  margin: "0",
+  backgroundColor: "transparent",
+  width: "100%",
+};
 
 export default async function Home() {
   const [postsResponse, featuredPosts] = await Promise.all([
@@ -40,21 +41,25 @@ export default async function Home() {
       <section className="pt-32 pb-20 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
         {/* Square-grid hero background (uses primary color as base) */}
         <div className="absolute inset-0 hero-grid-bg pointer-events-none" />
-        
+
         <div className="max-w-7xl mx-auto text-center relative z-10">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 dark:bg-primary/20 border border-primary/20 dark:border-primary/30 mb-6">
             <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-            <span className="text-sm font-medium text-primary">Welcome to Masteringbackend</span>
+            <span className="text-sm font-medium text-primary">
+              Welcome to Masteringbackend
+            </span>
           </div>
           <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold text-slate-900 dark:text-white mb-6 tracking-tight">
             The Backend
-            <span className="bg-gradient-to-r from-[#13AECE] to-[#0891b2] bg-clip-text text-transparent"> Chronicles</span>
+            <span className="bg-gradient-to-r from-[#13AECE] to-[#0891b2] bg-clip-text text-transparent">
+              {" "}
+              Chronicles
+            </span>
           </h1>
           <p className="text-xl md:text-2xl text-slate-700 dark:text-slate-200 max-w-3xl mx-auto mb-12 leading-relaxed">
-            Mastering the art of server-side engineering. Deep dives into system design, 
-            databases, and scalable architecture.
+            Mastering the art of server-side engineering. Deep dives into system
+            design, databases, and scalable architecture.
           </p>
-
         </div>
       </section>
 
@@ -72,18 +77,27 @@ export default async function Home() {
             Stay Ahead of the Curve
           </h2>
           <p className="text-slate-700 dark:text-slate-400 mb-10 max-w-2xl mx-auto text-lg">
-            Get the latest backend engineering articles, system design tutorials, and industry insights
-            delivered to your inbox weekly.
+            Get the latest backend engineering articles, system design
+            tutorials, and industry insights delivered to your inbox weekly.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 max-w-lg mx-auto">
-            <input
+            <iframe
+              src="https://kaperskyguru.substack.com/embed"
+              width="480"
+              height="150"
+              style={style}
+              frameBorder="0"
+              scrolling="no"
+            ></iframe>
+
+            {/* <input
               type="email"
               placeholder="Enter your email address"
               className="flex-1 px-6 py-4 bg-white border border-slate-200 rounded-xl text-slate-900 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-[#13AECE] focus:border-transparent transition-all dark:bg-white/5 dark:border-white/10 dark:text-white"
-            />
-            <button className="bg-[#13AECE] text-white px-8 py-4 rounded-xl hover:bg-[#13AECE]/90 transition-colors whitespace-nowrap font-semibold shadow-lg shadow-[#13AECE]/25">
+            /> */}
+            {/* <button className="bg-[#13AECE] text-white px-8 py-4 rounded-xl hover:bg-[#13AECE]/90 transition-colors whitespace-nowrap font-semibold shadow-lg shadow-[#13AECE]/25">
               Subscribe Now
-            </button>
+            </button> */}
           </div>
           <p className="text-slate-500 text-sm mt-6">
             Join 15,000+ backend engineers. Unsubscribe at any time.
@@ -97,38 +111,38 @@ export default async function Home() {
           <Link href="https://masteringbackend.com">
             <BrandLogo size="sm" variant="default" />
           </Link>
-            <div className="flex items-center space-x-6">
-                <a
-                  href="https://github.com/backendcommunity/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-slate-500 hover:text-[#13AECE] transition-colors"
-                  aria-label="Masteringbackend on GitHub"
-                >
-                  <Github className="w-5 h-5" />
-                </a>
-                <a
-                  href="https://x.com/master_backend"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-slate-500 hover:text-[#13AECE] transition-colors"
-                  aria-label="Masteringbackend on Twitter"
-                >
-                  <Twitter className="w-5 h-5" />
-                </a>
-                <a
-                  href="https://www.linkedin.com/company/masteringbackend"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-slate-500 hover:text-[#13AECE] transition-colors"
-                  aria-label="Masteringbackend on LinkedIn"
-                >
-                  <Linkedin className="w-5 h-5" />
-                </a>
-            </div>
-            <p className="text-slate-500 text-sm">
-                © {new Date().getFullYear()} Masteringbackend. All rights reserved.
-            </p>
+          <div className="flex items-center space-x-6">
+            <a
+              href="https://github.com/backendcommunity/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-slate-500 hover:text-[#13AECE] transition-colors"
+              aria-label="Masteringbackend on GitHub"
+            >
+              <Github className="w-5 h-5" />
+            </a>
+            <a
+              href="https://x.com/master_backend"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-slate-500 hover:text-[#13AECE] transition-colors"
+              aria-label="Masteringbackend on Twitter"
+            >
+              <Twitter className="w-5 h-5" />
+            </a>
+            <a
+              href="https://www.linkedin.com/company/masteringbackend"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-slate-500 hover:text-[#13AECE] transition-colors"
+              aria-label="Masteringbackend on LinkedIn"
+            >
+              <Linkedin className="w-5 h-5" />
+            </a>
+          </div>
+          <p className="text-slate-500 text-sm">
+            © {new Date().getFullYear()} Masteringbackend. All rights reserved.
+          </p>
         </div>
       </footer>
     </div>

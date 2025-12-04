@@ -5,8 +5,9 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { cn } from "@/lib/utils";
 
 export const metadata = {
-  title: "Masteringbackend - Backend Engineering Insights",
-  description: "Master backend development with in-depth articles on system design, databases, and scalable architecture.",
+  title: "Blog - Mastering Backend",
+  description:
+    "Advance your backend engineering and software engineering skills from system design, databases, data structures and algorithms to backend",
   icons: {
     icon: [
       { url: "/favicon.ico", sizes: "any" },
@@ -24,11 +25,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body
-        className={cn(
-          "min-h-screen bg-background font-sans antialiased"
-        )}
-      >
+      <body className={cn("min-h-screen bg-background font-sans antialiased")}>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

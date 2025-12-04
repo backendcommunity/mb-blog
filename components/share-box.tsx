@@ -1,14 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { 
-  Share2, 
-  Twitter, 
-  Linkedin, 
-  Facebook, 
-  Copy, 
+import {
+  Share2,
+  Twitter,
+  Linkedin,
+  Facebook,
   Check,
-  Link as LinkIcon
+  Link as LinkIcon,
 } from "lucide-react";
 
 interface ShareBoxProps {
@@ -18,7 +17,8 @@ interface ShareBoxProps {
 
 export function ShareBox({ title, url }: ShareBoxProps) {
   const [copied, setCopied] = useState(false);
-  const currentUrl = url || (typeof window !== 'undefined' ? window.location.href : '');
+  const currentUrl =
+    url || (typeof window !== "undefined" ? window.location.href : "");
 
   const handleShare = (platform: string) => {
     switch (platform) {
@@ -57,9 +57,11 @@ export function ShareBox({ title, url }: ShareBoxProps) {
         <div className="flex flex-col space-y-3">
           <div className="text-center mb-2">
             <Share2 className="w-5 h-5 text-slate-600 dark:text-slate-400 mx-auto mb-1" />
-            <p className="text-xs font-medium text-slate-600 dark:text-slate-400">Share</p>
+            <p className="text-xs font-medium text-slate-600 dark:text-slate-400">
+              Share
+            </p>
           </div>
-          
+
           <button
             onClick={() => handleShare("twitter")}
             className="flex items-center justify-center w-12 h-12 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 rounded-xl hover:bg-blue-100 dark:hover:bg-blue-900/40 transition-all hover:scale-110 group"
@@ -67,7 +69,7 @@ export function ShareBox({ title, url }: ShareBoxProps) {
           >
             <Twitter className="w-5 h-5 group-hover:scale-110 transition-transform" />
           </button>
-          
+
           <button
             onClick={() => handleShare("linkedin")}
             className="flex items-center justify-center w-12 h-12 bg-blue-50 dark:bg-blue-900/20 text-blue-700 dark:text-blue-400 rounded-xl hover:bg-blue-100 dark:hover:bg-blue-900/40 transition-all hover:scale-110 group"
@@ -75,7 +77,7 @@ export function ShareBox({ title, url }: ShareBoxProps) {
           >
             <Linkedin className="w-5 h-5 group-hover:scale-110 transition-transform" />
           </button>
-          
+
           <button
             onClick={() => handleShare("facebook")}
             className="flex items-center justify-center w-12 h-12 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 rounded-xl hover:bg-blue-100 dark:hover:bg-blue-900/40 transition-all hover:scale-110 group"
@@ -83,7 +85,7 @@ export function ShareBox({ title, url }: ShareBoxProps) {
           >
             <Facebook className="w-5 h-5 group-hover:scale-110 transition-transform" />
           </button>
-          
+
           <button
             onClick={() => handleShare("copy")}
             className="flex items-center justify-center w-12 h-12 bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-400 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-700 transition-all hover:scale-110 group"

@@ -1,13 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { 
-  Calendar, 
-  Clock, 
-  Tag, 
-  ArrowRight,
-  User
-} from "lucide-react";
+import { Calendar, Clock, Tag, ArrowRight } from "lucide-react";
 import type { BlogPost } from "@/lib/types";
 import { htmlToText } from "@/lib/utils";
 
@@ -28,7 +22,7 @@ export function ArticleOverview({ post }: ArticleOverviewProps) {
             className="w-full h-full object-cover"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-          
+
           {/* Category Badge */}
           <div className="absolute top-6 left-6">
             <Link
@@ -69,11 +63,12 @@ export function ArticleOverview({ post }: ArticleOverviewProps) {
           {/* Author Info */}
           <div className="flex items-center justify-between mb-6">
             <Link
-              href={`/author/${post.author.slug}`}
+              href={`/authors/${post.author.slug}`}
               className="flex items-center space-x-4 group"
             >
               <div className="w-12 h-12 bg-gradient-to-br from-[#13AECE]/20 to-[#0891b2]/20 rounded-full flex items-center justify-center text-[#13AECE] font-bold text-lg border-2 border-[#13AECE]/30">
-                {post.author.avatar || post.author.name.substring(0, 2).toUpperCase()}
+                {post.author.avatar ||
+                  post.author.name.substring(0, 2).toUpperCase()}
               </div>
               <div>
                 <p className="font-semibold text-slate-900 dark:text-white group-hover:text-[#13AECE] transition-colors">
@@ -142,11 +137,11 @@ export function ArticleOverview({ post }: ArticleOverviewProps) {
               Start reading this comprehensive article
             </p>
           </div>
-          <button 
+          <button
             onClick={() => {
-              const contentElement = document.querySelector('.article-content');
+              const contentElement = document.querySelector(".article-content");
               if (contentElement) {
-                contentElement.scrollIntoView({ behavior: 'smooth' });
+                contentElement.scrollIntoView({ behavior: "smooth" });
               }
             }}
             className="flex items-center space-x-2 text-[#13AECE] font-medium hover:text-[#0891b2] transition-colors cursor-pointer"

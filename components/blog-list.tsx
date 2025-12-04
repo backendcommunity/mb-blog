@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Link from "next/link";
 import {
   Search,
@@ -21,7 +21,11 @@ interface BlogListProps {
   categories: string[];
 }
 
-export function BlogList({ initialPosts, initialFeaturedPosts, categories }: BlogListProps) {
+export function BlogList({
+  initialPosts,
+  initialFeaturedPosts,
+  categories,
+}: BlogListProps) {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
@@ -34,7 +38,9 @@ export function BlogList({ initialPosts, initialFeaturedPosts, categories }: Blo
   const filteredPosts = posts.filter((post) => {
     const matchesSearch =
       post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      htmlToText(post.excerpt).toLowerCase().includes(searchTerm.toLowerCase()) ||
+      htmlToText(post.excerpt)
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase()) ||
       post.tags.some((tag) =>
         tag.toLowerCase().includes(searchTerm.toLowerCase())
       );
@@ -46,7 +52,9 @@ export function BlogList({ initialPosts, initialFeaturedPosts, categories }: Blo
   const filteredFeaturedPosts = featuredPosts.filter((post) => {
     const matchesSearch =
       post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      htmlToText(post.excerpt).toLowerCase().includes(searchTerm.toLowerCase()) ||
+      htmlToText(post.excerpt)
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase()) ||
       post.tags.some((tag) =>
         tag.toLowerCase().includes(searchTerm.toLowerCase())
       );
@@ -200,7 +208,8 @@ export function BlogList({ initialPosts, initialFeaturedPosts, categories }: Blo
                       <div className="flex items-center justify-between">
                         <div className="flex items-center space-x-3">
                           <div className="w-10 h-10 bg-gradient-to-br from-[#13AECE]/20 to-[#0891b2]/20 rounded-full flex items-center justify-center text-[#13AECE] font-bold text-sm">
-                            {post.author.avatar || post.author.name.substring(0, 2).toUpperCase()}
+                            {post.author.avatar ||
+                              post.author.name.substring(0, 2).toUpperCase()}
                           </div>
                           <div>
                             <p className="text-sm font-semibold text-slate-900 dark:text-white">
@@ -208,7 +217,11 @@ export function BlogList({ initialPosts, initialFeaturedPosts, categories }: Blo
                             </p>
                             <div className="flex items-center space-x-2 text-slate-500 dark:text-slate-400 text-xs">
                               <Calendar className="w-3 h-3" />
-                              <span>{new Date(post.publishedAt).toLocaleDateString()}</span>
+                              <span>
+                                {new Date(
+                                  post.publishedAt
+                                ).toLocaleDateString()}
+                              </span>
                             </div>
                           </div>
                         </div>
@@ -266,7 +279,8 @@ export function BlogList({ initialPosts, initialFeaturedPosts, categories }: Blo
                       </p>
                       <div className="flex items-center space-x-3">
                         <div className="w-8 h-8 bg-gradient-to-br from-[#13AECE]/20 to-[#0891b2]/20 rounded-full flex items-center justify-center text-[#13AECE] font-bold text-xs">
-                          {post.author.avatar || post.author.name.substring(0, 2).toUpperCase()}
+                          {post.author.avatar ||
+                            post.author.name.substring(0, 2).toUpperCase()}
                         </div>
                         <div className="flex-1">
                           <p className="text-sm font-semibold text-slate-900 dark:text-white">
@@ -314,7 +328,8 @@ export function BlogList({ initialPosts, initialFeaturedPosts, categories }: Blo
                         </p>
                         <div className="flex items-center space-x-3">
                           <div className="w-8 h-8 bg-gradient-to-br from-[#13AECE]/20 to-[#0891b2]/20 rounded-full flex items-center justify-center text-[#13AECE] font-bold text-xs">
-                            {post.author.avatar || post.author.name.substring(0, 2).toUpperCase()}
+                            {post.author.avatar ||
+                              post.author.name.substring(0, 2).toUpperCase()}
                           </div>
                           <div>
                             <p className="text-sm font-semibold text-slate-900 dark:text-white">

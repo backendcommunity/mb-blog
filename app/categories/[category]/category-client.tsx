@@ -3,8 +3,6 @@
 import { useState } from "react";
 import Link from "next/link";
 import { ArrowLeft, Calendar, Clock, Grid, List } from "lucide-react";
-import { BrandLogo } from "@/components/brand-logo";
-import { ThemeToggle } from "@/components/theme-toggle";
 import Header from "@/components/header";
 import { Pagination } from "@/components/pagination";
 import { htmlToText } from "@/lib/utils";
@@ -16,14 +14,19 @@ interface CategoryPageClientProps {
   total: number;
 }
 
-export function CategoryPageClient({ categoryName, posts, total }: CategoryPageClientProps) {
+export function CategoryPageClient({
+  categoryName,
+  posts,
+  total,
+}: CategoryPageClientProps) {
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [currentPage, setCurrentPage] = useState(1);
   const postsPerPage = 6;
 
   // Sort posts by date (newest first)
-  const sortedPosts = [...posts].sort((a, b) => 
-    new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
+  const sortedPosts = [...posts].sort(
+    (a, b) =>
+      new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
   );
 
   const totalPages = Math.ceil(sortedPosts.length / postsPerPage);

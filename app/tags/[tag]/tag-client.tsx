@@ -2,9 +2,14 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, Calendar, Clock, Grid, List, Tag as TagIcon } from "lucide-react";
-import { BrandLogo } from "@/components/brand-logo";
-import { ThemeToggle } from "@/components/theme-toggle";
+import {
+  ArrowLeft,
+  Calendar,
+  Clock,
+  Grid,
+  List,
+  Tag as TagIcon,
+} from "lucide-react";
 import Header from "@/components/header";
 import { Pagination } from "@/components/pagination";
 import { htmlToText } from "@/lib/utils";
@@ -22,8 +27,9 @@ export function TagPageClient({ tagName, posts, total }: TagPageClientProps) {
   const postsPerPage = 6;
 
   // Sort posts by date (newest first)
-  const sortedPosts = [...posts].sort((a, b) => 
-    new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
+  const sortedPosts = [...posts].sort(
+    (a, b) =>
+      new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
   );
 
   const totalPages = Math.ceil(sortedPosts.length / postsPerPage);

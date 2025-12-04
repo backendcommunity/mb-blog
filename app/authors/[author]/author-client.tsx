@@ -13,8 +13,6 @@ import {
   Linkedin,
   Facebook,
 } from "lucide-react";
-import { BrandLogo } from "@/components/brand-logo";
-import { ThemeToggle } from "@/components/theme-toggle";
 import Header from "@/components/header";
 import { Pagination } from "@/components/pagination";
 import { htmlToText } from "@/lib/utils";
@@ -31,14 +29,19 @@ interface AuthorPageClientProps {
   total: number;
 }
 
-export function AuthorPageClient({ authorInfo, posts, total }: AuthorPageClientProps) {
+export function AuthorPageClient({
+  authorInfo,
+  posts,
+  total,
+}: AuthorPageClientProps) {
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [currentPage, setCurrentPage] = useState(1);
   const postsPerPage = 6;
 
   // Sort posts by date (newest first)
-  const sortedPosts = [...posts].sort((a, b) => 
-    new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
+  const sortedPosts = [...posts].sort(
+    (a, b) =>
+      new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
   );
 
   const totalPages = Math.ceil(sortedPosts.length / postsPerPage);
@@ -46,6 +49,12 @@ export function AuthorPageClient({ authorInfo, posts, total }: AuthorPageClientP
     (currentPage - 1) * postsPerPage,
     currentPage * postsPerPage
   );
+
+  const style = {
+    margin: "0",
+    backgroundColor: "transparent",
+    width: "100%",
+  };
 
   return (
     <div className="min-h-screen bg-white dark:bg-[#0A0F1C] transition-colors duration-300 font-sans">
@@ -75,7 +84,8 @@ export function AuthorPageClient({ authorInfo, posts, total }: AuthorPageClientP
                 <div className="text-center mb-6">
                   <div className="w-32 h-32 bg-[#13AECE] rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
                     <span className="text-white font-bold text-4xl">
-                      {authorInfo.avatar || authorInfo.name.substring(0, 2).toUpperCase()}
+                      {authorInfo.avatar ||
+                        authorInfo.name.substring(0, 2).toUpperCase()}
                     </span>
                   </div>
                   <h1 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">
@@ -86,13 +96,25 @@ export function AuthorPageClient({ authorInfo, posts, total }: AuthorPageClientP
                   </p>
                   {/* Social Icons */}
                   <div className="flex items-center justify-center gap-4 mt-6">
-                    <a href="#" aria-label="Twitter" className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800/60 text-slate-600 dark:text-slate-300 hover:text-[#13AECE] hover:bg-slate-200 dark:hover:bg-slate-700 transition">
+                    <a
+                      href="#"
+                      aria-label="Twitter"
+                      className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800/60 text-slate-600 dark:text-slate-300 hover:text-[#13AECE] hover:bg-slate-200 dark:hover:bg-slate-700 transition"
+                    >
                       <Twitter className="w-5 h-5" />
                     </a>
-                    <a href="#" aria-label="LinkedIn" className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800/60 text-slate-600 dark:text-slate-300 hover:text-[#13AECE] hover:bg-slate-200 dark:hover:bg-slate-700 transition">
+                    <a
+                      href="#"
+                      aria-label="LinkedIn"
+                      className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800/60 text-slate-600 dark:text-slate-300 hover:text-[#13AECE] hover:bg-slate-200 dark:hover:bg-slate-700 transition"
+                    >
                       <Linkedin className="w-5 h-5" />
                     </a>
-                    <a href="#" aria-label="Facebook" className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800/60 text-slate-600 dark:text-slate-300 hover:text-[#13AECE] hover:bg-slate-200 dark:hover:bg-slate-700 transition">
+                    <a
+                      href="#"
+                      aria-label="Facebook"
+                      className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800/60 text-slate-600 dark:text-slate-300 hover:text-[#13AECE] hover:bg-slate-200 dark:hover:bg-slate-700 transition"
+                    >
                       <Facebook className="w-5 h-5" />
                     </a>
                   </div>
@@ -227,7 +249,9 @@ export function AuthorPageClient({ authorInfo, posts, total }: AuthorPageClientP
                               <div className="flex items-center space-x-2 text-slate-500 dark:text-slate-400 text-sm">
                                 <Calendar className="w-4 h-4" />
                                 <span>
-                                  {new Date(post.publishedAt).toLocaleDateString()}
+                                  {new Date(
+                                    post.publishedAt
+                                  ).toLocaleDateString()}
                                 </span>
                               </div>
                               <div className="flex items-center space-x-2 text-slate-500 dark:text-slate-400 text-sm">
@@ -284,17 +308,27 @@ export function AuthorPageClient({ authorInfo, posts, total }: AuthorPageClientP
             Follow {authorInfo.name}
           </h2>
           <p className="text-slate-400 mb-10 max-w-2xl mx-auto text-lg">
-            Stay updated with {authorInfo.name}'s latest articles and insights on backend development.
+            Stay updated with {authorInfo.name}'s latest articles and insights
+            on backend development.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 max-w-lg mx-auto">
-            <input
+            {/* <input
               type="email"
               placeholder="Enter your email"
               className="flex-1 px-6 py-4 bg-white/5 border border-white/10 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-[#13AECE] focus:border-transparent transition-all"
             />
             <button className="bg-[#13AECE] text-white px-8 py-4 rounded-xl hover:bg-[#13AECE]/90 transition-colors whitespace-nowrap font-semibold shadow-lg shadow-[#13AECE]/25">
               Follow
-            </button>
+            </button> */}
+
+            <iframe
+              src="https://kaperskyguru.substack.com/embed"
+              width="480"
+              height="150"
+              style={style}
+              frameBorder="0"
+              scrolling="no"
+            ></iframe>
           </div>
         </div>
       </section>

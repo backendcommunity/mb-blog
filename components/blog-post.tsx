@@ -8,22 +8,16 @@ import {
   Clock,
   Tag,
   Share2,
-  Bookmark,
-  ThumbsUp,
   Twitter,
   Linkedin,
   Facebook,
   Copy,
   Check,
 } from "lucide-react";
-import { BrandLogo } from "@/components/brand-logo";
-import { ThemeToggle } from "@/components/theme-toggle";
+
 import Header from "@/components/header";
 import { DefinitiveArticleOverview } from "@/components/definitive-article-overview";
-import { ArticleOverview } from "@/components/article-overview";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
-import type { Components } from "react-markdown";
+
 import type { BlogPost } from "@/lib/types";
 import { htmlToText, renderBlogContent } from "@/lib/utils";
 
@@ -40,7 +34,9 @@ const CodeBlock = ({
   return (
     <div className="relative my-6">
       <div className="flex items-center justify-between bg-slate-800 dark:bg-slate-900 px-4 py-2 rounded-t-lg border-b border-slate-700 dark:border-slate-800">
-        <span className="text-slate-400 dark:text-slate-500 text-sm font-medium uppercase">{language}</span>
+        <span className="text-slate-400 dark:text-slate-500 text-sm font-medium uppercase">
+          {language}
+        </span>
         <button
           onClick={() => navigator.clipboard.writeText(children)}
           className="text-slate-400 dark:text-slate-500 hover:text-[#13AECE] dark:hover:text-[#13AECE] text-sm px-3 py-1 rounded-lg hover:bg-slate-700 dark:hover:bg-slate-800 transition-all"
@@ -60,9 +56,10 @@ interface BlogPostClientProps {
   relatedPosts: BlogPost[];
 }
 
-export function BlogPostClient({ blogPost, relatedPosts }: BlogPostClientProps) {
-  const [isLiked, setIsLiked] = useState(false);
-  const [isBookmarked, setIsBookmarked] = useState(false);
+export function BlogPostClient({
+  blogPost,
+  relatedPosts,
+}: BlogPostClientProps) {
   const [showShareMenu, setShowShareMenu] = useState(false);
   const [copied, setCopied] = useState(false);
 
@@ -101,8 +98,16 @@ export function BlogPostClient({ blogPost, relatedPosts }: BlogPostClientProps) 
     setShowShareMenu(false);
   };
 
-  const excerptText = htmlToText(blogPost.excerpt);
-  const isDefinitiveGuide = blogPost.type === 'definitive' && blogPost.chapters && blogPost.chapters.length > 0;
+  const style = {
+    margin: "0",
+    backgroundColor: "transparent",
+    width: "100%",
+  };
+
+  const isDefinitiveGuide =
+    blogPost.type === "definitive" &&
+    blogPost.chapters &&
+    blogPost.chapters.length > 0;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 transition-colors duration-300 font-sans">
@@ -158,11 +163,12 @@ export function BlogPostClient({ blogPost, relatedPosts }: BlogPostClientProps) 
               {/* Author and Actions */}
               <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8">
                 <Link
-                  href={`/author/${blogPost.author.slug}`}
+                  href={`/authors/${blogPost.author.slug}`}
                   className="flex items-center space-x-4 group"
                 >
                   <div className="w-16 h-16 bg-gradient-to-br from-[#13AECE]/20 to-[#0891b2]/20 rounded-full flex items-center justify-center text-[#13AECE] font-bold text-xl border-2 border-[#13AECE]/30 shadow-lg shadow-[#13AECE]/10">
-                      {blogPost.author.avatar || blogPost.author.name.substring(0, 2).toUpperCase()}
+                    {blogPost.author.avatar ||
+                      blogPost.author.name.substring(0, 2).toUpperCase()}
                   </div>
                   <div>
                     <p className="text-lg font-semibold text-slate-900 dark:text-white group-hover:text-[#13AECE] transition-colors">
@@ -176,7 +182,6 @@ export function BlogPostClient({ blogPost, relatedPosts }: BlogPostClientProps) 
 
                 {/* Action Buttons */}
                 <div className="flex items-center space-x-4">
-                 
                   <div className="relative">
                     <button
                       onClick={() => setShowShareMenu(!showShareMenu)}
@@ -243,7 +248,7 @@ export function BlogPostClient({ blogPost, relatedPosts }: BlogPostClientProps) 
       <main className="px-4 sm:px-6 lg:px-8 pb-16">
         <div className="max-w-4xl mx-auto">
           {!isDefinitiveGuide && (
-            <div
+            <article
               className="article-content max-w-none overflow-x-hidden break-words"
               dangerouslySetInnerHTML={{
                 __html: renderBlogContent(blogPost.content),
@@ -260,7 +265,9 @@ export function BlogPostClient({ blogPost, relatedPosts }: BlogPostClientProps) 
               {blogPost.tags.map((tag, index) => (
                 <Link
                   key={tag}
-                  href={`/tags/${blogPost.tagSlugs[index] || tag.toLowerCase()}`}
+                  href={`/tags/${
+                    blogPost.tagSlugs[index] || tag.toLowerCase()
+                  }`}
                   className="flex items-center space-x-1 bg-slate-100 dark:bg-slate-800/50 text-slate-600 dark:text-slate-400 px-4 py-2 rounded-full hover:bg-gradient-to-r hover:from-[#13AECE] hover:to-[#0891b2] hover:text-white transition-all hover:scale-105 border border-slate-200 dark:border-slate-700 hover:border-transparent hover:shadow-lg hover:shadow-[#13AECE]/30"
                 >
                   <Tag className="w-3 h-3" />
@@ -308,7 +315,9 @@ export function BlogPostClient({ blogPost, relatedPosts }: BlogPostClientProps) 
                     </h3>
                     <p className="text-slate-600 dark:text-slate-500 text-sm line-clamp-2">
                       {/* Ensure related posts don't render HTML tags either */}
-                      {htmlToText(typeof post.excerpt === "string" ? post.excerpt : "")}
+                      {htmlToText(
+                        typeof post.excerpt === "string" ? post.excerpt : ""
+                      )}
                     </p>
                   </div>
                 </article>
@@ -330,14 +339,24 @@ export function BlogPostClient({ blogPost, relatedPosts }: BlogPostClientProps) 
             and tutorials.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
-            <input
+            {/* <input
               type="email"
               placeholder="Enter your email"
               className="flex-1 px-6 py-4 bg-white border border-slate-200 rounded-xl text-slate-900 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-[#13AECE] focus:border-transparent transition-all dark:bg-white/5 dark:border-white/10 dark:text-white"
             />
             <button className="bg-[#13AECE] text-white px-8 py-4 rounded-xl hover:bg-[#13AECE]/90 transition-colors whitespace-nowrap font-semibold shadow-lg shadow-[#13AECE]/25">
               Subscribe
-            </button>
+              
+            </button> */}
+
+            <iframe
+              src="https://kaperskyguru.substack.com/embed"
+              width="480"
+              height="150"
+              style={style}
+              frameBorder="0"
+              scrolling="no"
+            ></iframe>
           </div>
         </div>
       </section>
