@@ -47,6 +47,10 @@ export default function RootLayout({
         >
           {children}
         </ThemeProvider>
+        <script
+          src="https://topbanner.app/api/embed/221712517d41fd1718f01ee3796b4528.js"
+          async
+        ></script>
       </body>
     </html>
   );
