@@ -13,6 +13,9 @@ export interface StrapiAuthor {
   slug: string;
   bio?: string;
   avatar?: StrapiImage;
+  x?: string;
+  linkedin?: string;
+  facebook?: string;
 }
 
 export interface StrapiCategory {
@@ -121,6 +124,9 @@ export interface BlogPost {
     slug: string;
     bio: string;
     avatar: string;
+    x?: string;
+    linkedin?: string;
+    facebook?: string;
   };
   publishedAt: string;
   updatedAt: string;
