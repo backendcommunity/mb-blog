@@ -52,6 +52,9 @@ export interface StrapiPostAttributes {
   excerpt: string;
   content: string;
   is_public: boolean;
+  is_sticky?: boolean;
+  /** Minutes, computed server-side so list queries never need `content`. */
+  read_time?: number;
   type?: string;
   color?: string;
   featured_image?: {

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   Search,
   Calendar,
@@ -16,72 +17,57 @@ import type { BlogPost } from "@/lib/types";
 import { htmlToText } from "@/lib/utils";
 
 interface BlogListProps {
-  initialPosts: BlogPost[];
-  initialFeaturedPosts: BlogPost[];
+  /** Posts for the current page only — filtering and paging happen server-side. */
+  posts: BlogPost[];
+  featuredPosts: BlogPost[];
   categories: string[];
+  currentPage: number;
+  totalPages: number;
+  searchTerm: string;
+  selectedCategory: string;
+}
+
+/**
+ * Build a homepage URL from the current filter state.
+ *
+ * Everything that changes what's on screen lives in the URL, so each view is a
+ * real, crawlable, shareable address. Empty/default values are omitted to keep
+ * canonical URLs clean and avoid `?page=1` duplicates of `/`.
+ */
+function buildUrl({
+  page,
+  q,
+  category,
+}: {
+  page?: number;
+  q?: string;
+  category?: string;
+}): string {
+  const params = new URLSearchParams();
+  if (q) params.set("q", q);
+  if (category && category !== "All") params.set("category", category);
+  if (page && page > 1) params.set("page", String(page));
+  const qs = params.toString();
+  return qs ? `/?${qs}` : "/";
 }
 
 export function BlogList({
-  initialPosts,
-  initialFeaturedPosts,
+  posts,
+  featuredPosts,
   categories,
+  currentPage,
+  totalPages,
+  searchTerm,
+  selectedCategory,
 }: BlogListProps) {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("All");
+  const router = useRouter();
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [showFilters, setShowFilters] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [posts, setPosts] = useState(initialPosts);
-  const [featuredPosts, setFeaturedPosts] = useState(initialFeaturedPosts);
-  const postsPerPage = 6;
+  const [searchInput, setSearchInput] = useState(searchTerm);
 
-  const filteredPosts = posts.filter((post) => {
-    const matchesSearch =
-      post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      htmlToText(post.excerpt)
-        .toLowerCase()
-        .includes(searchTerm.toLowerCase()) ||
-      post.tags.some((tag) =>
-        tag.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-    const matchesCategory =
-      selectedCategory === "All" || post.category === selectedCategory;
-    return matchesSearch && matchesCategory;
-  });
-
-  const filteredFeaturedPosts = featuredPosts.filter((post) => {
-    const matchesSearch =
-      post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      htmlToText(post.excerpt)
-        .toLowerCase()
-        .includes(searchTerm.toLowerCase()) ||
-      post.tags.some((tag) =>
-        tag.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-    const matchesCategory =
-      selectedCategory === "All" || post.category === selectedCategory;
-    return matchesSearch && matchesCategory;
-  });
-
-  const regularPosts = filteredPosts.filter((post) => !post.featured);
-
-  // Pagination for regular posts
-  const totalPages = Math.ceil(regularPosts.length / postsPerPage);
-  const startIndex = (currentPage - 1) * postsPerPage;
-  const paginatedPosts = regularPosts.slice(
-    startIndex,
-    startIndex + postsPerPage
-  );
-
-  // Reset to page 1 when filters change
-  const handleFilterChange = (newCategory: string) => {
-    setSelectedCategory(newCategory);
-    setCurrentPage(1);
-  };
-
-  const handleSearchChange = (value: string) => {
-    setSearchTerm(value);
-    setCurrentPage(1);
+  const handleSearchSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    router.push(buildUrl({ q: searchInput.trim(), category: selectedCategory }));
   };
 
   return (
@@ -90,22 +76,28 @@ export function BlogList({
       <div className="max-w-7xl mx-auto mt-8">
         <div className="flex flex-col lg:flex-row gap-6 items-center">
           {/* Search Bar */}
-          <div className="relative flex-1 w-full">
+          <form onSubmit={handleSearchSubmit} className="relative flex-1 w-full">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" />
             <input
-              type="text"
+              type="search"
+              name="q"
               placeholder="Search for articles, topics..."
-              value={searchTerm}
-              onChange={(e) => handleSearchChange(e.target.value)}
+              value={searchInput}
+              onChange={(e) => setSearchInput(e.target.value)}
+              aria-label="Search articles"
               className="w-full pl-12 pr-4 py-4 bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-2xl text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#13AECE] focus:border-transparent shadow-lg shadow-slate-200/50 dark:shadow-slate-900/50 transition-all hover:shadow-xl"
             />
-          </div>
+            <button type="submit" className="sr-only">
+              Search
+            </button>
+          </form>
 
           <div className="flex items-center gap-4">
             {/* View Toggle */}
             <div className="flex items-center bg-white dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl p-1 shadow-lg shadow-slate-200/50 dark:shadow-slate-900/50">
               <button
                 onClick={() => setViewMode("grid")}
+                aria-label="Grid view"
                 className={`p-2 rounded-lg transition-all ${
                   viewMode === "grid"
                     ? "bg-[#13AECE] text-white shadow-md"
@@ -116,6 +108,7 @@ export function BlogList({
               </button>
               <button
                 onClick={() => setViewMode("list")}
+                aria-label="List view"
                 className={`p-2 rounded-lg transition-all ${
                   viewMode === "list"
                     ? "bg-[#13AECE] text-white shadow-md"
@@ -141,13 +134,14 @@ export function BlogList({
           </div>
         </div>
 
-        {/* Category Filters */}
+        {/* Category Filters — real links, so each category view is indexable */}
         {showFilters && (
           <div className="mt-6 flex flex-wrap gap-3">
             {categories.map((category) => (
-              <button
+              <Link
                 key={category}
-                onClick={() => handleFilterChange(category)}
+                href={buildUrl({ q: searchTerm, category })}
+                scroll={false}
                 className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
                   selectedCategory === category
                     ? "bg-[#13AECE] text-white shadow-lg shadow-[#13AECE]/30"
@@ -155,14 +149,14 @@ export function BlogList({
                 }`}
               >
                 {category}
-              </button>
+              </Link>
             ))}
           </div>
         )}
       </div>
 
-      {/* Featured Posts */}
-      {filteredFeaturedPosts.length > 0 && (
+      {/* Featured Posts — only on the unfiltered first page */}
+      {featuredPosts.length > 0 && (
         <section className="py-16 px-4 sm:px-6 lg:px-8">
           <div className="max-w-7xl mx-auto">
             <div className="flex items-center space-x-3 mb-10">
@@ -173,13 +167,14 @@ export function BlogList({
             </div>
 
             <div className="grid md:grid-cols-2 gap-x-8 gap-y-12">
-              {filteredFeaturedPosts.map((post) => (
+              {featuredPosts.map((post) => (
                 <Link key={post.id} href={`/${post.slug}`} className="group">
                   <article className="h-full bg-white dark:bg-slate-800/50 rounded-3xl overflow-hidden border border-slate-200 dark:border-slate-700/50 hover:shadow-2xl hover:shadow-[#13AECE]/10 dark:hover:shadow-[#13AECE]/20 hover:border-[#13AECE]/50 dark:hover:border-[#13AECE]/50 transition-all duration-500 group-hover:-translate-y-2 backdrop-blur-sm">
                     <div className="aspect-video bg-slate-100 dark:bg-slate-800 relative overflow-hidden">
                       <img
                         src={post.image || "/placeholder.svg"}
                         alt={post.title}
+                        loading="lazy"
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                       />
                       <div className="absolute top-4 left-4">
@@ -193,11 +188,15 @@ export function BlogList({
                         <span className="text-[#13AECE] text-xs font-bold uppercase tracking-wider">
                           {post.category}
                         </span>
-                        <div className="w-1 h-1 bg-slate-300 dark:bg-slate-600 rounded-full"></div>
-                        <div className="flex items-center space-x-2 text-slate-500 dark:text-slate-400 text-xs">
-                          <Clock className="w-3 h-3" />
-                          <span>{post.readTime}</span>
-                        </div>
+                        {post.readTime && (
+                          <>
+                            <div className="w-1 h-1 bg-slate-300 dark:bg-slate-600 rounded-full"></div>
+                            <div className="flex items-center space-x-2 text-slate-500 dark:text-slate-400 text-xs">
+                              <Clock className="w-3 h-3" />
+                              <span>{post.readTime}</span>
+                            </div>
+                          </>
+                        )}
                       </div>
                       <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-4 group-hover:text-[#13AECE] transition-colors line-clamp-2">
                         {post.title}
@@ -218,9 +217,7 @@ export function BlogList({
                             <div className="flex items-center space-x-2 text-slate-500 dark:text-slate-400 text-xs">
                               <Calendar className="w-3 h-3" />
                               <span>
-                                {new Date(
-                                  post.publishedAt
-                                ).toLocaleDateString()}
+                                {new Date(post.publishedAt).toLocaleDateString()}
                               </span>
                             </div>
                           </div>
@@ -243,20 +240,33 @@ export function BlogList({
             <div className="flex items-center space-x-3">
               <div className="w-1.5 h-10 bg-gradient-to-b from-[#13AECE] to-[#0891b2] rounded-full shadow-lg shadow-[#13AECE]/30"></div>
               <h2 className="text-4xl font-bold bg-gradient-to-r from-slate-900 to-slate-700 dark:from-white dark:to-slate-300 bg-clip-text text-transparent">
-                Latest Articles
+                {searchTerm
+                  ? `Results for “${searchTerm}”`
+                  : selectedCategory !== "All"
+                  ? selectedCategory
+                  : "Latest Articles"}
               </h2>
             </div>
           </div>
 
-          {viewMode === "grid" ? (
+          {posts.length === 0 ? (
+            <p className="text-slate-600 dark:text-slate-400 text-lg">
+              No articles found
+              {searchTerm ? ` for “${searchTerm}”` : ""}.{" "}
+              <Link href="/" className="text-[#13AECE] hover:underline">
+                Clear filters
+              </Link>
+            </p>
+          ) : viewMode === "grid" ? (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12">
-              {paginatedPosts.map((post) => (
+              {posts.map((post) => (
                 <Link key={post.id} href={`/${post.slug}`} className="group">
                   <article className="bg-white dark:bg-slate-800/50 rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-700/50 hover:shadow-xl hover:shadow-[#13AECE]/10 dark:hover:shadow-[#13AECE]/20 hover:border-[#13AECE]/50 dark:hover:border-[#13AECE]/50 transition-all duration-500 group-hover:-translate-y-2 backdrop-blur-sm">
                     <div className="aspect-video bg-slate-100 dark:bg-slate-800 relative overflow-hidden">
                       <img
                         src={post.image || "/placeholder.svg"}
                         alt={post.title}
+                        loading="lazy"
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                       />
                     </div>
@@ -265,11 +275,15 @@ export function BlogList({
                         <span className="text-[#13AECE] text-xs font-bold uppercase tracking-wider">
                           {post.category}
                         </span>
-                        <div className="w-1 h-1 bg-slate-300 dark:bg-slate-600 rounded-full"></div>
-                        <div className="flex items-center space-x-2 text-slate-500 dark:text-slate-400 text-xs">
-                          <Clock className="w-3 h-3" />
-                          <span>{post.readTime}</span>
-                        </div>
+                        {post.readTime && (
+                          <>
+                            <div className="w-1 h-1 bg-slate-300 dark:bg-slate-600 rounded-full"></div>
+                            <div className="flex items-center space-x-2 text-slate-500 dark:text-slate-400 text-xs">
+                              <Clock className="w-3 h-3" />
+                              <span>{post.readTime}</span>
+                            </div>
+                          </>
+                        )}
                       </div>
                       <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3 group-hover:text-[#13AECE] transition-colors line-clamp-2">
                         {post.title}
@@ -298,7 +312,7 @@ export function BlogList({
             </div>
           ) : (
             <div className="space-y-6">
-              {paginatedPosts.map((post) => (
+              {posts.map((post) => (
                 <Link key={post.id} href={`/${post.slug}`} className="group">
                   <article className="bg-white dark:bg-slate-800/50 p-6 rounded-2xl border border-slate-200 dark:border-slate-700/50 hover:shadow-xl hover:shadow-[#13AECE]/10 dark:hover:shadow-[#13AECE]/20 hover:border-[#13AECE]/50 dark:hover:border-[#13AECE]/50 transition-all duration-500 group-hover:-translate-x-2 backdrop-blur-sm">
                     <div className="flex gap-6">
@@ -306,6 +320,7 @@ export function BlogList({
                         <img
                           src={post.image || "/placeholder.svg"}
                           alt={post.title}
+                          loading="lazy"
                           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                         />
                       </div>
@@ -314,11 +329,15 @@ export function BlogList({
                           <span className="text-[#13AECE] text-xs font-bold uppercase tracking-wider">
                             {post.category}
                           </span>
-                          <div className="w-1 h-1 bg-slate-300 dark:bg-slate-600 rounded-full"></div>
-                          <div className="flex items-center space-x-2 text-slate-500 dark:text-slate-400 text-xs">
-                            <Clock className="w-3 h-3" />
-                            <span>{post.readTime}</span>
-                          </div>
+                          {post.readTime && (
+                            <>
+                              <div className="w-1 h-1 bg-slate-300 dark:bg-slate-600 rounded-full"></div>
+                              <div className="flex items-center space-x-2 text-slate-500 dark:text-slate-400 text-xs">
+                                <Clock className="w-3 h-3" />
+                                <span>{post.readTime}</span>
+                              </div>
+                            </>
+                          )}
                         </div>
                         <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2 group-hover:text-[#13AECE] transition-colors line-clamp-1">
                           {post.title}
@@ -348,13 +367,15 @@ export function BlogList({
             </div>
           )}
 
-          {/* Pagination */}
+          {/* Pagination — link mode, so every page has a crawlable URL */}
           {totalPages > 1 && (
             <div className="mt-12">
               <Pagination
                 currentPage={currentPage}
                 totalPages={totalPages}
-                onPageChange={setCurrentPage}
+                buildHref={(page) =>
+                  buildUrl({ page, q: searchTerm, category: selectedCategory })
+                }
               />
             </div>
           )}

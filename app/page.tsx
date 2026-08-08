@@ -3,18 +3,68 @@ import { Github, Twitter, Linkedin } from "lucide-react";
 import { BrandLogo } from "@/components/brand-logo";
 import Header from "@/components/header";
 import { BlogList } from "@/components/blog-list";
-import { getPosts, getStickyPosts } from "@/lib/strapi";
-import type { BlogPost } from "@/lib/types";
+import { getPosts, getStickyPosts, getCategoryNames } from "@/lib/strapi";
 
-// Extract unique categories from posts
-function extractCategories(posts: BlogPost[]): string[] {
-  const categories = new Set<string>();
-  posts.forEach((post) => {
-    if (post.category && post.category !== "Uncategorized") {
-      categories.add(post.category);
-    }
-  });
-  return ["All", ...Array.from(categories).sort()];
+const POSTS_PER_PAGE = 12;
+
+const SITE_URL = (
+  process.env.NEXT_PUBLIC_SITE_URL || "https://blog.masteringbackend.com"
+).replace(/\/$/, "");
+
+interface HomeProps {
+  searchParams: Promise<{ page?: string; q?: string; category?: string }>;
+}
+
+function parseParams(sp: { page?: string; q?: string; category?: string }) {
+  const parsed = Number.parseInt(sp.page ?? "1", 10);
+  return {
+    page: Number.isFinite(parsed) && parsed > 0 ? parsed : 1,
+    query: sp.q?.trim() || "",
+    category: sp.category?.trim() || "All",
+  };
+}
+
+function canonicalPath({
+  page,
+  query,
+  category,
+}: {
+  page: number;
+  query: string;
+  category: string;
+}) {
+  const params = new URLSearchParams();
+  if (query) params.set("q", query);
+  if (category !== "All") params.set("category", category);
+  if (page > 1) params.set("page", String(page));
+  const qs = params.toString();
+  return qs ? `/?${qs}` : "/";
+}
+
+export async function generateMetadata({ searchParams }: HomeProps) {
+  const { page, query, category } = parseParams(await searchParams);
+
+  // Search results are thin/duplicate content — keep them out of the index but
+  // still followable so the crawler can reach the posts they link to.
+  if (query) {
+    return {
+      title: `Search: ${query} - Mastering Backend`,
+      robots: { index: false, follow: true },
+      alternates: { canonical: `${SITE_URL}/` },
+    };
+  }
+
+  const titleBase =
+    category !== "All"
+      ? `${category} - Mastering Backend`
+      : "Blog - Mastering Backend";
+
+  return {
+    title: page > 1 ? `${titleBase} - Page ${page}` : titleBase,
+    alternates: {
+      canonical: `${SITE_URL}${canonicalPath({ page, query, category })}`,
+    },
+  };
 }
 
 const style = {
@@ -23,14 +73,18 @@ const style = {
   width: "100%",
 };
 
-export default async function Home() {
-  const [postsResponse, featuredPosts] = await Promise.all([
-    getPosts({ page: 1, count: 1000 }),
-    getStickyPosts(),
-  ]);
+export default async function Home({ searchParams }: HomeProps) {
+  const { page, query, category } = parseParams(await searchParams);
 
-  const allPosts = postsResponse.posts;
-  const categories = extractCategories(allPosts);
+  // Featured posts are a homepage banner, not a search result — only show them
+  // on the unfiltered first page.
+  const isDefaultView = page === 1 && !query && category === "All";
+
+  const [postsResponse, featuredPosts, categories] = await Promise.all([
+    getPosts({ page, count: POSTS_PER_PAGE, query, category }),
+    isDefaultView ? getStickyPosts() : Promise.resolve([]),
+    getCategoryNames(),
+  ]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 transition-colors duration-300 font-sans">
@@ -64,9 +118,13 @@ export default async function Home() {
       </section>
 
       <BlogList
-        initialPosts={allPosts}
-        initialFeaturedPosts={featuredPosts}
+        posts={postsResponse.posts}
+        featuredPosts={featuredPosts}
         categories={categories}
+        currentPage={page}
+        totalPages={postsResponse.pages}
+        searchTerm={query}
+        selectedCategory={category}
       />
 
       {/* Newsletter Signup */}
