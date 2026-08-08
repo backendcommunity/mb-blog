@@ -9,7 +9,7 @@ import {
   Grid,
   List,
   Filter,
-  Twitter,
+  X,
   Linkedin,
   Facebook,
 } from "lucide-react";
@@ -24,6 +24,9 @@ interface AuthorPageClientProps {
     slug: string;
     bio: string;
     avatar: string;
+    x?: string;
+    linkedin?: string;
+    facebook?: string;
   };
   posts: BlogPost[];
   total: number;
@@ -96,27 +99,39 @@ export function AuthorPageClient({
                   </p>
                   {/* Social Icons */}
                   <div className="flex items-center justify-center gap-4 mt-6">
-                    <a
-                      href="#"
-                      aria-label="Twitter"
-                      className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800/60 text-slate-600 dark:text-slate-300 hover:text-[#13AECE] hover:bg-slate-200 dark:hover:bg-slate-700 transition"
-                    >
-                      <Twitter className="w-5 h-5" />
-                    </a>
-                    <a
-                      href="#"
-                      aria-label="LinkedIn"
-                      className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800/60 text-slate-600 dark:text-slate-300 hover:text-[#13AECE] hover:bg-slate-200 dark:hover:bg-slate-700 transition"
-                    >
-                      <Linkedin className="w-5 h-5" />
-                    </a>
-                    <a
-                      href="#"
-                      aria-label="Facebook"
-                      className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800/60 text-slate-600 dark:text-slate-300 hover:text-[#13AECE] hover:bg-slate-200 dark:hover:bg-slate-700 transition"
-                    >
-                      <Facebook className="w-5 h-5" />
-                    </a>
+                    {authorInfo.x && (
+                      <a
+                        href={authorInfo.x}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label="X"
+                        className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800/60 text-slate-600 dark:text-slate-300 hover:text-[#13AECE] hover:bg-slate-200 dark:hover:bg-slate-700 transition"
+                      >
+                        <X className="w-5 h-5" />
+                      </a>
+                    )}
+                    {authorInfo.linkedin && (
+                      <a
+                        href={authorInfo.linkedin}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label="LinkedIn"
+                        className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800/60 text-slate-600 dark:text-slate-300 hover:text-[#13AECE] hover:bg-slate-200 dark:hover:bg-slate-700 transition"
+                      >
+                        <Linkedin className="w-5 h-5" />
+                      </a>
+                    )}
+                    {authorInfo.facebook && (
+                      <a
+                        href={authorInfo.facebook}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label="Facebook"
+                        className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800/60 text-slate-600 dark:text-slate-300 hover:text-[#13AECE] hover:bg-slate-200 dark:hover:bg-slate-700 transition"
+                      >
+                        <Facebook className="w-5 h-5" />
+                      </a>
+                    )}
                   </div>
                 </div>
 
