@@ -130,6 +130,16 @@ export function mapPost(strapiPost: StrapiPost): BlogPost {
       slug: author?.attributes?.slug || 'anonymous',
       bio: author?.attributes?.bio || '',
       avatar: author?.attributes?.avatar?.url || '',
+      // From ee2a66b (social links on author profiles).
+      //
+      // These are safe to read even though the author content type has no
+      // x/linkedin/facebook/bio attributes — they resolve to undefined and
+      // fall back to ''. They must NOT be added to a `fields` selection until
+      // the CMS has them: `fields` is an allowlist and an unknown key fails
+      // the whole request with a 400 (see HAS_READ_TIME above).
+      x: author?.attributes?.x || '',
+      linkedin: author?.attributes?.linkedin || '',
+      facebook: author?.attributes?.facebook || '',
     },
     publishedAt: attributes.publishedAt || attributes.createdAt,
     updatedAt: attributes.updatedAt,
