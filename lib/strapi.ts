@@ -106,10 +106,10 @@ const SINGLE_POST_POPULATE = [
   "populate[categories]=true",
   "populate[tags]=true",
   "populate[featured_image]=true",
-  "populate[chapters][populate][featured_image]=true",
+  // "populate[chapters][populate][featured_image]=true",
   "populate[chapters][populate][posts][populate][author]=true",
   "populate[chapters][populate][posts][populate][categories]=true",
-  "populate[chapters][populate][posts][populate][featured_image]=true",
+  // "populate[chapters][populate][posts][populate][featured_image]=true",
 ].join("&");
 
 // Map Strapi post to frontend BlogPost format
