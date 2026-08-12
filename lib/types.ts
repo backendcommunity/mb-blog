@@ -60,6 +60,13 @@ export interface StrapiPostAttributes {
   read_time?: number;
   type?: string;
   color?: string;
+  /**
+   * Plain URL string, separate from the `featured_image` media relation.
+   * The SEO pipeline hosts generated featured images on Cloudflare R2 and
+   * writes the public URL here rather than uploading via Strapi's media
+   * library. mapPost falls back to this when featured_image is absent.
+   */
+  image?: string;
   featured_image?: {
     data?: {
       attributes: StrapiImage;

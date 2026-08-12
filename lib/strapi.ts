@@ -76,6 +76,8 @@ const LIST_FIELDS = [
   "type",
   "color",
   "is_sticky",
+  // Fallback featured image URL, used when the featured_image relation is empty.
+  "image",
   ...(HAS_READ_TIME ? ["read_time"] : []),
 ]
   .map((field, i) => `fields[${i}]=${field}`)
@@ -157,7 +159,16 @@ export function mapPost(strapiPost: StrapiPost): BlogPost {
     updatedAt: attributes.updatedAt,
     readTime: formatReadTime(readTimeMinutes),
     featured: attributes.is_sticky ?? false,
-    image: featuredImage?.url || "/placeholder.svg?height=400&width=800",
+    // Prefer the featured_image media relation. Fall back to the plain `image`
+    // string field before the placeholder, because the SEO pipeline hosts
+    // generated featured images on Cloudflare R2 and writes the public URL
+    // there rather than uploading through Strapi's media library.
+    image:
+      featuredImage?.url ||
+      (typeof attributes.image === "string" && attributes.image.trim()
+        ? attributes.image
+        : "") ||
+      "/placeholder.svg?height=400&width=800",
     likes: Math.floor(Math.random() * 200) + 50, // Mock data
     comments: Math.floor(Math.random() * 50) + 5, // Mock data
     bookmarks: Math.floor(Math.random() * 100) + 20, // Mock data
